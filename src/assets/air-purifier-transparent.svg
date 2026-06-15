@@ -1,0 +1,24 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="purifierBody" x1="128" y1="34" x2="128" y2="222" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FAFC"/>
+      <stop offset="0.58" stop-color="#EEF2F7"/>
+      <stop offset="1" stop-color="#D8E0EA"/>
+    </linearGradient>
+    <radialGradient id="purifierTop" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(128 54) rotate(90) scale(26 54)">
+      <stop stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#CBD5E1"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="128" cy="226" rx="44" ry="10" fill="#CBD5E1"/>
+  <path d="M76 60C76 40.1178 92.1178 24 112 24H144C163.882 24 180 40.1178 180 60V188C180 207.882 163.882 224 144 224H112C92.1178 224 76 207.882 76 188V60Z" fill="url(#purifierBody)" stroke="#CBD5E1" stroke-width="4"/>
+  <ellipse cx="128" cy="54" rx="48" ry="22" fill="url(#purifierTop)" stroke="#CBD5E1" stroke-width="4"/>
+  <ellipse cx="128" cy="54" rx="28" ry="12" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2.5"/>
+  <path d="M84 138H172" stroke="#D7DEE8" stroke-width="3"/>
+  <g fill="#94A3B8">
+    <circle cx="102" cy="154" r="2.5"/><circle cx="116" cy="154" r="2.5"/><circle cx="130" cy="154" r="2.5"/><circle cx="144" cy="154" r="2.5"/><circle cx="158" cy="154" r="2.5"/>
+    <circle cx="95" cy="166" r="2.5"/><circle cx="109" cy="166" r="2.5"/><circle cx="123" cy="166" r="2.5"/><circle cx="137" cy="166" r="2.5"/><circle cx="151" cy="166" r="2.5"/><circle cx="165" cy="166" r="2.5"/>
+    <circle cx="102" cy="178" r="2.5"/><circle cx="116" cy="178" r="2.5"/><circle cx="130" cy="178" r="2.5"/><circle cx="144" cy="178" r="2.5"/><circle cx="158" cy="178" r="2.5"/>
+    <circle cx="95" cy="190" r="2.5"/><circle cx="109" cy="190" r="2.5"/><circle cx="123" cy="190" r="2.5"/><circle cx="137" cy="190" r="2.5"/><circle cx="151" cy="190" r="2.5"/><circle cx="165" cy="190" r="2.5"/>
+  </g>
+</svg>

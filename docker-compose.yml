@@ -1,0 +1,22 @@
+services:
+  ha-dashboard-ui:
+    container_name: ha-dashboard
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ha-dashboard:local
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      HOST: "0.0.0.0"
+      HA_DASHBOARD_BASE_URL: "http://192.168.0.100:8123"
+      HA_DASHBOARD_FALLBACK_URLS: "http://homeassistant.local:8123"
+      HA_DASHBOARD_TOKEN: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjZjMwNzRhYTkzNDI0ZGQwYjJmYWE4ZjkxMTdjYWY4NiIsImlhdCI6MTc3OTg3MDM4NywiZXhwIjoyMDk1MjMwMzg3fQ.nUl9zfyS-IeCk4fgAwSH2cQiuh8zDaD0W2M56RAb7u0"
+      # Optional HTTPS support inside the container:
+      # HTTPS_CERT_FILE: "/app/certs/lan-cert.pem"
+      # HTTPS_KEY_FILE: "/app/certs/lan-key.pem"
+    # Uncomment if you want to use the bundled cert files:
+    # volumes:
+    #   - ./certs:/app/certs:ro

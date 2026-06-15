@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.idea/
+
+# Local TLS material
+certs/
+
+# OS / editor noise
+.DS_Store
+
+# Optional local env files
+.env
+.env.local
+.env.production

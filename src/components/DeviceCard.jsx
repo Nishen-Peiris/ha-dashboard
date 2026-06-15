@@ -1,0 +1,99 @@
+import { motion } from 'framer-motion'
+import { ChevronDown } from 'lucide-react'
+
+function Toggle({ checked, onClick }) {
+  return (
+    <button className={`control-switch device-card-toggle${checked ? ' on' : ''}`} onClick={onClick} aria-pressed={checked} type="button">
+      <span className="control-switch-thumb" />
+    </button>
+  )
+}
+
+export default function DeviceCard({
+  title,
+  subtitle,
+  subtitleMenuLabel,
+  subtitleMenuOpen = false,
+  subtitleMenuOptions = [],
+  onSubtitleClick,
+  onSubtitleSelect,
+  icon: Icon,
+  imageSrc,
+  isOn,
+  onToggle,
+  sliderMin = 0,
+  sliderMax = 100,
+  sliderStep = 1,
+  sliderCurrent,
+  onSliderChange,
+}) {
+  return (
+    <motion.div whileHover={{ y: -4 }} className={`card device-card${subtitle ? ' has-subtitle' : ''}${isOn ? ' active' : ''}`}>
+      <div className="card-head device-card-head">
+        <div className="device-card-head-main">
+          <div className="card-title device-card-title">{title}</div>
+          {subtitle ? (
+            onSubtitleClick ? (
+              <div className="device-card-subtitle-wrap">
+                <button
+                  className={`device-card-subtitle-button${subtitleMenuOpen ? ' active' : ''}`}
+                  onClick={onSubtitleClick}
+                  type="button"
+                >
+                  <span>{subtitleMenuLabel ?? subtitle}</span>
+                  <ChevronDown size={12} />
+                </button>
+                {subtitleMenuOpen ? (
+                  <div className="device-card-subtitle-menu">
+                    {subtitleMenuOptions.map((option) => (
+                      <button
+                        key={option}
+                        className={`device-card-subtitle-option${subtitle === option ? ' active' : ''}`}
+                        onClick={() => onSubtitleSelect?.(option)}
+                        type="button"
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <div className="device-card-subtitle">{subtitle}</div>
+            )
+          ) : null}
+        </div>
+        <div className="device-card-controls">
+          <Toggle checked={isOn} onClick={onToggle} />
+        </div>
+      </div>
+
+      <div className="device-card-body">
+        <div className="device-card-visual">
+          {imageSrc ? (
+            <img className="device-card-image" src={imageSrc} alt="" aria-hidden="true" />
+          ) : (
+            <div className="device-card-icon-wrap">
+              <Icon size={44} />
+            </div>
+          )}
+        </div>
+
+        {isOn && typeof sliderCurrent === 'number' ? (
+          <div className="device-card-slider-block">
+            <input
+              className="device-card-slider"
+              type="range"
+              min={sliderMin}
+              max={sliderMax}
+              step={sliderStep}
+              value={sliderCurrent}
+              onChange={(event) => onSliderChange?.(Number(event.target.value))}
+            />
+          </div>
+        ) : null}
+
+      </div>
+    </motion.div>
+  )
+}

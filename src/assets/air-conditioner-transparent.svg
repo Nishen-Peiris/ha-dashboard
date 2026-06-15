@@ -1,0 +1,23 @@
+<svg width="320" height="192" viewBox="0 0 320 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="acBody" x1="36" y1="48" x2="284" y2="142" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FAFC"/>
+      <stop offset="0.6" stop-color="#E5EBF3"/>
+      <stop offset="1" stop-color="#CAD5E3"/>
+    </linearGradient>
+    <linearGradient id="acShadow" x1="160" y1="120" x2="160" y2="154" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#94A3B8"/>
+      <stop offset="1" stop-color="#475569"/>
+    </linearGradient>
+  </defs>
+  <path d="M34 76C34 61.6406 45.6406 50 60 50H260C274.359 50 286 61.6406 286 76V108C286 122.359 274.359 134 260 134H60C45.6406 134 34 122.359 34 108V76Z" fill="url(#acBody)" stroke="#CBD5E1" stroke-width="4"/>
+  <path d="M34 98H286" stroke="#E2E8F0" stroke-width="2"/>
+  <rect x="46" y="60" width="34" height="60" rx="10" fill="#EEF2F7"/>
+  <path d="M44 121H288L276 143C273 148 268 151 262 151H58C52 151 47 148 44 143L34 127C31 123 34 121 44 121Z" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="4"/>
+  <rect x="52" y="126" width="216" height="12" rx="6" fill="url(#acShadow)"/>
+  <g stroke="#64748B" stroke-width="3" stroke-linecap="round">
+    <path d="M70 132H250"/>
+    <path d="M82 136H238"/>
+  </g>
+  <circle cx="256" cy="68" r="4" fill="#CBD5E1"/>
+</svg>

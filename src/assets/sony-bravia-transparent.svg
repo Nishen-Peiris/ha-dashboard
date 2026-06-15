@@ -1,0 +1,22 @@
+<svg width="320" height="192" viewBox="0 0 320 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="tvFrame" x1="160" y1="24" x2="160" y2="150" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#20252E"/>
+      <stop offset="1" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="tvScreen" x1="48" y1="40" x2="272" y2="126" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FB923C"/>
+      <stop offset="0.35" stop-color="#EA580C"/>
+      <stop offset="0.62" stop-color="#1D4ED8"/>
+      <stop offset="1" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+  <rect x="28" y="24" width="264" height="128" rx="8" fill="url(#tvFrame)"/>
+  <rect x="34" y="30" width="252" height="116" rx="4" fill="url(#tvScreen)"/>
+  <path d="M54 42C86 72 106 108 144 126C176 142 220 138 270 116V34H52C48 34 44 38 44 42C44 42 48 42 54 42Z" fill="url(#tvScreen)" opacity="0.65"/>
+  <path d="M132 132C160 114 178 92 214 60C220 54 226 48 236 42C208 44 174 54 152 70C130 86 120 110 132 132Z" fill="#FDBA74" opacity="0.75"/>
+  <path d="M86 64C102 92 114 120 136 138C118 138 94 134 78 120C62 106 58 82 86 64Z" fill="#7C2D12" opacity="0.48"/>
+  <rect x="152" y="152" width="16" height="10" rx="4" fill="#1E293B"/>
+  <path d="M124 166H196L206 178H114L124 166Z" fill="#334155"/>
+  <path d="M44 180H276" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+</svg>

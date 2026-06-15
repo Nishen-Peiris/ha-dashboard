@@ -1,0 +1,22 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="vapBody" x1="128" y1="34" x2="128" y2="150" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#DDE5EE"/>
+    </linearGradient>
+    <linearGradient id="vapGlass" x1="128" y1="144" x2="128" y2="224" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FAFC" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#E2E8F0" stop-opacity="0.65"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="128" cy="228" rx="36" ry="10" fill="#CBD5E1"/>
+  <path d="M92 58C92 38.1178 108.118 22 128 22C147.882 22 164 38.1178 164 58V126C164 145.882 147.882 162 128 162C108.118 162 92 145.882 92 126V58Z" fill="url(#vapBody)" stroke="#CBD5E1" stroke-width="4"/>
+  <rect x="102" y="86" width="52" height="30" rx="26" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="3"/>
+  <circle cx="128" cy="101" r="14" fill="#F1F5F9" stroke="#94A3B8" stroke-width="2"/>
+  <circle cx="128" cy="67" r="3.5" fill="#94A3B8"/>
+  <path d="M96 150H160L156 214C155.5 222 149 228 141 228H115C107 228 100.5 222 100 214L96 150Z" fill="url(#vapGlass)" stroke="#CBD5E1" stroke-width="4"/>
+  <path d="M102 178C112 174 122 172 128 172C134 172 144 174 154 178V208C144 212 134 214 128 214C122 214 112 212 102 208V178Z" fill="#F5EBD9" fill-opacity="0.45"/>
+  <rect x="120" y="146" width="16" height="76" rx="8" fill="#F1E4CC" stroke="#D6C6AA" stroke-width="2"/>
+  <path d="M74 82C80 72 88 64 96 58" stroke="#94A3B8" stroke-width="4" stroke-linecap="round"/>
+  <rect x="60" y="76" width="20" height="12" rx="4" fill="#94A3B8"/>
+</svg>
