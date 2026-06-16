@@ -31,10 +31,11 @@ Open `http://<docker-host-ip>:8080`.
 
 CasaOS can run this directly from the included [`docker-compose.yml`](./docker-compose.yml).
 
-1. Open CasaOS `App Store` -> `Import` -> `Compose`.
-2. Paste the contents of [`docker-compose.yml`](./docker-compose.yml).
-3. Replace `HA_DASHBOARD_BASE_URL`, `HA_DASHBOARD_FALLBACK_URLS`, and `HA_DASHBOARD_TOKEN` with your real values.
-4. Deploy the app.
+1. Copy [`.env.example`](./.env.example) to `.env` and set `HA_DASHBOARD_BASE_URL`, `HA_DASHBOARD_FALLBACK_URLS`, and `HA_DASHBOARD_TOKEN`.
+2. Open CasaOS `App Store` -> `Import` -> `Compose`.
+3. Paste the contents of [`docker-compose.yml`](./docker-compose.yml).
+4. Make sure the `.env` values are available to the compose deployment.
+5. Deploy the app.
 
 If you want HTTPS in the container, uncomment the `volumes` and `HTTPS_CERT_FILE` / `HTTPS_KEY_FILE` lines in [`docker-compose.yml`](./docker-compose.yml) and keep your cert files under [`certs`](./certs).
 That directory is intended for local deployment material and should stay out of version control.

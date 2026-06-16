@@ -26,7 +26,7 @@ const mimeTypes = {
 }
 
 function getConfigScript() {
-  const fallbackUrls = (process.env.HA_DASHBOARD_FALLBACK_URLS ?? '')
+  const fallbackUrls = (process.env.HA_DASHBOARD_FALLBACK_URLS ?? process.env.HA_DASHBOARD_FALLBACK_URL ?? '')
     .split(',')
     .map((value) => value.trim())
     .filter(Boolean)

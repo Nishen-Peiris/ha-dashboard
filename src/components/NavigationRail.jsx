@@ -4,7 +4,6 @@ import {
   ChefHat,
   DoorOpen,
   House,
-  LayoutGrid,
   Sofa,
   Trees,
   Warehouse,
@@ -19,7 +18,6 @@ const NAV_ITEMS = [
   { key: 'Kitchen', label: 'Kitchen', shortLabel: 'Kit', icon: ChefHat, type: 'room' },
   { key: 'Back Room', label: 'Back Room', shortLabel: 'Back', icon: Warehouse, type: 'room' },
   { key: 'Bathroom', label: 'Bathroom', shortLabel: 'Bath', icon: Bath, type: 'room' },
-  { key: 'dashboard', label: 'Maintenance', shortLabel: 'Main', icon: LayoutGrid, type: 'page' },
 ]
 
 export default function NavigationRail({ activePage, selectedRoom, onNavigate }) {
