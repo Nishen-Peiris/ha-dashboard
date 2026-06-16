@@ -1607,6 +1607,10 @@ body{
   object-position:50% 58%;
 }
 
+.device-image-apple-tv{
+  object-position:44% 54%;
+}
+
 .device-image-charger{
   object-position:54% 54%;
 }
@@ -1621,6 +1625,10 @@ body{
 
 .device-image-pendant-light{
   object-position:50% 70%;
+}
+
+.device-image-sony-bravia{
+  object-position:50% 58%;
 }
 
 .device-image-vaporizer{

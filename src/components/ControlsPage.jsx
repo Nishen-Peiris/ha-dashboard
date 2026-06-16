@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { BatteryCharging, Coffee, Droplets, Fan, LampFloor, Lightbulb, Monitor, Plug, Wind } from 'lucide-react'
+import { BatteryCharging, Bot, Coffee, Droplets, Fan, LampFloor, Lightbulb, Monitor, Plug, Wind } from 'lucide-react'
 import ClimateCard from './ClimateCard'
 import DeviceCard from './DeviceCard'
 import MediaCard from './MediaCard'
 import airConditionerImage from '../assets/device-air-conditioner.png'
 import airPurifierImage from '../assets/device-air-purifier.png'
+import appleTvImage from '../assets/apple-tv.png'
 import chargerImage from '../assets/device-charger.png'
 import coffeeMakerImage from '../assets/device-coffee-maker.png'
 import fanImage from '../assets/device-fan.png'
@@ -12,7 +13,9 @@ import kettleImage from '../assets/device-kettle.png'
 import lightStripImage from '../assets/device-light-strip.png'
 import monitorImage from '../assets/device-monitor.png'
 import pendantLightImage from '../assets/device-pendant-light.png'
+import sonyBraviaImage from '../assets/sony-bravia.png'
 import vaporizerImage from '../assets/device-vaporizer.png'
+import vacuumImage from '../assets/device-xiaomi-h40-vacuum.png'
 
 export const ROOMS = [
   'Outdoor',
@@ -42,6 +45,18 @@ function getBrightnessPercent(entity) {
 function getNumericEntityValue(entity, fallback = 0) {
   const parsed = Number.parseFloat(entity?.state)
   return Number.isFinite(parsed) ? parsed : fallback
+}
+
+function formatStatusLabel(entity) {
+  const value = entity?.state
+
+  if (!value || ['unknown', 'unavailable'].includes(value)) {
+    return undefined
+  }
+
+  return value
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (char) => char.toUpperCase())
 }
 
 function formatClimateSubtitle(isOn, temperature, filterRemaining) {
@@ -88,6 +103,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
   const livingRoomChargerOutlet = entityIndex['switch.living_room_charger_outlet']
   const livingRoomFan = entityIndex['fan.living_room_fan']
   const livingRoomMonitor = entityIndex['switch.nishen_s_monitor']
+  const livingRoomVacuumStatus = entityIndex['sensor.xiaomi_ov51gl_cfcf_status']
   const outdoorLight = entityIndex['light.outdoor_light']
   const backRoomLight = entityIndex['light.back_room_light']
   const bathroomLight = entityIndex['light.bathroom_light']
@@ -140,6 +156,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
   const chargerSubtitle = isLivingRoomChargerOn
     ? (deviceToCharge?.state ?? 'Device To Charge')
     : undefined
+  const vacuumSubtitle = formatStatusLabel(livingRoomVacuumStatus)
 
   return (
     <div className="rooms-shell">
@@ -162,11 +179,10 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 isOn={isLivingRoomFanOn}
                 onToggle={() => onCallService('fan', 'toggle', undefined, { entity_id: ['fan.living_room_fan'] })}
               />
-              <DeviceCard
+              <MediaCard
                 title="Sony Bravia"
-                icon={Monitor}
-                imageSrc={monitorImage}
-                imageClassName="device-image-monitor"
+                imageSrc={sonyBraviaImage}
+                imageClassName="device-image-sony-bravia"
                 isOn={isLivingRoomSonyTvOn}
                 onToggle={() =>
                   onCallService('media_player', isLivingRoomSonyTvOn ? 'turn_off' : 'turn_on', undefined, { entity_id: ['media_player.living_room_sony_tv'] })
@@ -175,8 +191,8 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               <MediaCard
                 title="Apple TV"
                 subtitle={isAppleTvOn ? `${appleTvVolume}%` : undefined}
-                imageSrc={monitorImage}
-                imageClassName="device-image-monitor"
+                imageSrc={appleTvImage}
+                imageClassName="device-image-apple-tv"
                 isOn={isAppleTvOn}
                 onToggle={() =>
                   onCallService('media_player', isAppleTvOn ? 'turn_off' : 'turn_on', undefined, { entity_id: ['media_player.apple_tv'] })
@@ -217,6 +233,14 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                   setOpenSelector(null)
                   onCallService('switch', 'toggle', undefined, { entity_id: ['switch.living_room_charger_outlet'] })
                 }}
+              />
+              <DeviceCard
+                title="Xiaomi Robot Vacuum"
+                subtitle={vacuumSubtitle}
+                icon={Bot}
+                imageSrc={vacuumImage}
+                isOn={['cleaning', 'returning', 'docking'].includes(livingRoomVacuumStatus?.state)}
+                showToggle={false}
               />
           </div>
         ) : selectedRoom === 'Front Room' ? (
@@ -355,8 +379,8 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               <MediaCard
                 title="Sony Bravia"
                 subtitle={isBedroomSonyTvOn ? `${bedroomSonyTvVolume}%` : undefined}
-                imageSrc={monitorImage}
-                imageClassName="device-image-monitor"
+                imageSrc={sonyBraviaImage}
+                imageClassName="device-image-sony-bravia"
                 isOn={isBedroomSonyTvOn}
                 onToggle={() =>
                   onCallService('media_player', isBedroomSonyTvOn ? 'turn_off' : 'turn_on', undefined, { entity_id: ['media_player.bedroom_sony_tv'] })

@@ -22,6 +22,7 @@ export default function DeviceCard({
   imageClassName,
   isOn,
   onToggle,
+  showToggle = true,
 }) {
   return (
     <motion.div whileHover={{ y: -4 }} className={`card device-card${subtitle ? ' has-subtitle' : ''}${isOn ? ' active' : ''}`}>
@@ -59,9 +60,11 @@ export default function DeviceCard({
             )
           ) : null}
         </div>
-        <div className="device-card-controls">
-          <Toggle checked={isOn} onClick={onToggle} />
-        </div>
+        {showToggle ? (
+          <div className="device-card-controls">
+            <Toggle checked={isOn} onClick={onToggle} />
+          </div>
+        ) : null}
       </div>
 
       <div className="device-card-body">
