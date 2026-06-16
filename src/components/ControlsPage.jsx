@@ -44,16 +44,22 @@ function getNumericEntityValue(entity, fallback = 0) {
   return Number.isFinite(parsed) ? parsed : fallback
 }
 
-function getNumericEntityBounds(entity, fallbackMin, fallbackMax, fallbackStep = 1) {
-  const min = Number.parseFloat(entity?.attributes?.min)
-  const max = Number.parseFloat(entity?.attributes?.max)
-  const step = Number.parseFloat(entity?.attributes?.step)
-
-  return {
-    min: Number.isFinite(min) ? min : fallbackMin,
-    max: Number.isFinite(max) ? max : fallbackMax,
-    step: Number.isFinite(step) ? step : fallbackStep,
+function formatClimateSubtitle(isOn, temperature, filterRemaining) {
+  if (!isOn) {
+    return undefined
   }
+
+  const parts = []
+
+  if (Number.isFinite(temperature)) {
+    parts.push(`${Math.round(temperature)}°C`)
+  }
+
+  if (Number.isFinite(filterRemaining)) {
+    parts.push(`Filter ${Math.max(0, Math.min(100, Math.round(filterRemaining)))}%`)
+  }
+
+  return parts.join(' • ') || undefined
 }
 
 export default function ControlsPage({ selectedRoom, entityIndex, onCallService }) {
@@ -119,19 +125,13 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
     : 0
   const outdoorLightBrightness = getBrightnessPercent(outdoorLight)
   const frontRoomLightLevel = getNumericEntityValue(frontRoomLightBrightness)
-  const frontRoomLightBounds = getNumericEntityBounds(frontRoomLightBrightness, 0, 100, 1)
   const frontRoomAcLevel = getNumericEntityValue(frontRoomAcTemperature, 24)
-  const frontRoomAcBounds = getNumericEntityBounds(frontRoomAcTemperature, 16, 30, 1)
   const frontRoomAcFilterRemaining = 100
   const bedroomAirConditionerTargetTemperature = bedroomAirConditionerTemperature?.state
     ? Number.parseFloat(bedroomAirConditionerTemperature.state)
     : 0
-  const bedroomAirConditionerMinTemperature = 26
-  const bedroomAirConditionerMaxTemperature = 30
-  const bedroomAirConditionerTemperatureStep = 1
   const bedroomAirConditionerFilterRemaining = getNumericEntityValue(bedroomAcFilterRemaining, Number.NaN)
   const bedroomSonyTvVolume = getVolumePercent(bedroomSonyTv)
-  const livingRoomSonyTvVolume = getVolumePercent(livingRoomSonyTv)
   const appleTvVolume = getVolumePercent(appleTv)
   const isBedroomSonyTvOn = isMediaOn(bedroomSonyTv)
   const isLivingRoomSonyTvOn = isMediaOn(livingRoomSonyTv)
@@ -172,17 +172,10 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               <MediaCard
                 title="Apple TV"
                 subtitle={isAppleTvOn ? `${appleTvVolume}%` : undefined}
-                wide
                 imageSrc={monitorImage}
                 isOn={isAppleTvOn}
-                volume={appleTvVolume}
                 onToggle={() =>
                   onCallService('media_player', isAppleTvOn ? 'turn_off' : 'turn_on', undefined, { entity_id: ['media_player.apple_tv'] })
-                }
-                onPlay={() => onCallService('media_player', 'media_play', undefined, { entity_id: ['media_player.apple_tv'] })}
-                onPause={() => onCallService('media_player', 'media_pause', undefined, { entity_id: ['media_player.apple_tv'] })}
-                onVolumeChange={(value) =>
-                  onCallService('media_player', 'volume_set', { volume_level: value / 100 }, { entity_id: ['media_player.apple_tv'] })
                 }
               />
               <DeviceCard
@@ -229,13 +222,6 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 icon={Lightbulb}
                 imageSrc={pendantLightImage}
                 isOn={isFrontRoomLightOn}
-                sliderMin={frontRoomLightBounds.min}
-                sliderMax={frontRoomLightBounds.max}
-                sliderStep={frontRoomLightBounds.step}
-                sliderCurrent={isFrontRoomLightOn ? frontRoomLightLevel : undefined}
-                onSliderChange={(value) =>
-                  onCallService('input_number', 'set_value', { value }, { entity_id: ['input_number.front_room_light_brightness'] })
-                }
                 onToggle={() => onCallService('light', 'toggle', undefined, { entity_id: ['light.front_room_light'] })}
               />
               <DeviceCard
@@ -254,20 +240,9 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               />
               <ClimateCard
                 title="Air Conditioner"
-                wide
+                subtitle={formatClimateSubtitle(isFrontRoomAcOn, frontRoomAcLevel, frontRoomAcFilterRemaining)}
                 imageSrc={airConditionerImage}
                 isOn={isFrontRoomAcOn}
-                targetTemperature={frontRoomAcLevel}
-                filterRemaining={frontRoomAcFilterRemaining}
-                step={frontRoomAcBounds.step}
-                onTemperatureChange={(value) =>
-                  onCallService(
-                    'input_number',
-                    'set_value',
-                    { value: Math.max(frontRoomAcBounds.min, Math.min(frontRoomAcBounds.max, value)) },
-                    { entity_id: ['input_number.front_room_ac_temperature'] },
-                  )
-                }
                 onToggle={() => onCallService('input_boolean', 'toggle', undefined, { entity_id: ['input_boolean.front_room_ac_power'] })}
               />
               <DeviceCard
@@ -293,12 +268,6 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               icon={Lightbulb}
               imageSrc={pendantLightImage}
               isOn={isOutdoorLightOn}
-              sliderMin={0}
-              sliderMax={100}
-              sliderCurrent={outdoorLightBrightness}
-              onSliderChange={(value) =>
-                onCallService('light', 'turn_on', { brightness_pct: value }, { entity_id: ['light.outdoor_light'] })
-              }
               onToggle={() => onCallService('light', 'toggle', undefined, { entity_id: ['light.outdoor_light'] })}
             />
           </div>
@@ -310,12 +279,6 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 icon={Lightbulb}
                 imageSrc={pendantLightImage}
                 isOn={isKitchenLightOn}
-                sliderMin={0}
-                sliderMax={100}
-                sliderCurrent={kitchenLightBrightness}
-                onSliderChange={(value) =>
-                  onCallService('light', 'turn_on', { brightness_pct: value }, { entity_id: ['light.kitchen_light'] })
-                }
                 onToggle={() => onCallService('light', 'toggle', undefined, { entity_id: ['light.kitchen_light'] })}
               />
               <DeviceCard
@@ -351,20 +314,13 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               />
               <ClimateCard
                 title="Air Conditioner"
-                wide
+                subtitle={formatClimateSubtitle(
+                  isBedroomAirConditionerOn,
+                  bedroomAirConditionerTargetTemperature,
+                  bedroomAirConditionerFilterRemaining,
+                )}
                 imageSrc={airConditionerImage}
                 isOn={isBedroomAirConditionerOn}
-                targetTemperature={bedroomAirConditionerTargetTemperature}
-                filterRemaining={bedroomAirConditionerFilterRemaining}
-                step={bedroomAirConditionerTemperatureStep}
-                onTemperatureChange={(value) =>
-                  onCallService(
-                    'input_number',
-                    'set_value',
-                    { value: Math.max(bedroomAirConditionerMinTemperature, Math.min(bedroomAirConditionerMaxTemperature, value)) },
-                    { entity_id: ['input_number.bedroom_ac_temperature'] },
-                  )
-                }
                 onToggle={() => onCallService('input_boolean', 'toggle', undefined, { entity_id: ['input_boolean.bedroom_ac_power'] })}
               />
               <DeviceCard
@@ -384,17 +340,10 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               <MediaCard
                 title="Sony Bravia"
                 subtitle={isBedroomSonyTvOn ? `${bedroomSonyTvVolume}%` : undefined}
-                wide
                 imageSrc={monitorImage}
                 isOn={isBedroomSonyTvOn}
-                volume={bedroomSonyTvVolume}
                 onToggle={() =>
                   onCallService('media_player', isBedroomSonyTvOn ? 'turn_off' : 'turn_on', undefined, { entity_id: ['media_player.bedroom_sony_tv'] })
-                }
-                onPlay={() => onCallService('media_player', 'media_play', undefined, { entity_id: ['media_player.bedroom_sony_tv'] })}
-                onPause={() => onCallService('media_player', 'media_pause', undefined, { entity_id: ['media_player.bedroom_sony_tv'] })}
-                onVolumeChange={(value) =>
-                  onCallService('media_player', 'volume_set', { volume_level: value / 100 }, { entity_id: ['media_player.bedroom_sony_tv'] })
                 }
               />
           </div>
@@ -406,12 +355,6 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               icon={Lightbulb}
               imageSrc={pendantLightImage}
               isOn={isBackRoomLightOn}
-              sliderMin={0}
-              sliderMax={100}
-              sliderCurrent={backRoomLightBrightness}
-              onSliderChange={(value) =>
-                onCallService('light', 'turn_on', { brightness_pct: value }, { entity_id: ['light.back_room_light'] })
-              }
               onToggle={() => onCallService('light', 'toggle', undefined, { entity_id: ['light.back_room_light'] })}
             />
           </div>
@@ -423,12 +366,6 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               icon={Lightbulb}
               imageSrc={pendantLightImage}
               isOn={isBathroomLightOn}
-              sliderMin={0}
-              sliderMax={100}
-              sliderCurrent={bathroomLightBrightness}
-              onSliderChange={(value) =>
-                onCallService('light', 'turn_on', { brightness_pct: value }, { entity_id: ['light.bathroom_light'] })
-              }
               onToggle={() => onCallService('light', 'toggle', undefined, { entity_id: ['light.bathroom_light'] })}
             />
           </div>

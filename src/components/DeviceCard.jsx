@@ -21,11 +21,6 @@ export default function DeviceCard({
   imageSrc,
   isOn,
   onToggle,
-  sliderMin = 0,
-  sliderMax = 100,
-  sliderStep = 1,
-  sliderCurrent,
-  onSliderChange,
 }) {
   return (
     <motion.div whileHover={{ y: -4 }} className={`card device-card${subtitle ? ' has-subtitle' : ''}${isOn ? ' active' : ''}`}>
@@ -78,21 +73,6 @@ export default function DeviceCard({
             </div>
           )}
         </div>
-
-        {isOn && typeof sliderCurrent === 'number' ? (
-          <div className="device-card-slider-block">
-            <input
-              className="device-card-slider"
-              type="range"
-              min={sliderMin}
-              max={sliderMax}
-              step={sliderStep}
-              value={sliderCurrent}
-              onChange={(event) => onSliderChange?.(Number(event.target.value))}
-            />
-          </div>
-        ) : null}
-
       </div>
     </motion.div>
   )

@@ -47,32 +47,20 @@ function stripTrailingWord(value, word) {
   return value.replace(new RegExp(`\\s*${word}$`, 'i'), '').trim()
 }
 
-function formatRelativeTime(timestamp) {
-  const parsed = new Date(timestamp)
+function getWelcomeMessage() {
+  const hour = new Date().getHours()
 
-  if (Number.isNaN(parsed.getTime())) {
-    return ''
-  }
+  if (hour < 12) return 'Good morning'
+  if (hour < 17) return 'Good afternoon'
+  if (hour < 21) return 'Good evening'
+  return 'Good night'
+}
 
-  const diffSeconds = Math.round((parsed.getTime() - Date.now()) / 1000)
-  const formatter = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
-  const absoluteSeconds = Math.abs(diffSeconds)
-
-  if (absoluteSeconds < 60) {
-    return formatter.format(diffSeconds, 'second')
-  }
-
-  const diffMinutes = Math.round(diffSeconds / 60)
-  if (Math.abs(diffMinutes) < 60) {
-    return formatter.format(diffMinutes, 'minute')
-  }
-
-  const diffHours = Math.round(diffMinutes / 60)
-  return formatter.format(diffHours, 'hour')
+function getEntityLabel(entity, fallbackEntityId) {
+  return entity?.attributes?.friendly_name ?? fallbackEntityId
 }
 
 export default function DashboardHeader({
-  activity = [],
   entityIndex,
   onPowerOff,
   onRestart,
@@ -81,11 +69,10 @@ export default function DashboardHeader({
   openDoors,
   theme,
 }) {
-  const [activityOpen, setActivityOpen] = useState(false)
+  const [selectedChip, setSelectedChip] = useState(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef(null)
-  const activityDialogRef = useRef(null)
-  const visibleActivity = activity.slice(0, 12)
+  const chipDialogRef = useRef(null)
   const activeRooms = occupiedRooms.filter((room) => room.occupied)
   const activeDoors = openDoors.filter((door) => door.open)
   const doorText = activeDoors.length ? joinNatural(activeDoors.map((door) => stripTrailingWord(door.name, 'Door'))) : 'All secure'
@@ -98,43 +85,61 @@ export default function DashboardHeader({
   const fansOn = DEVICE_GROUPS.fans.filter((entityId) => entityIndex[entityId]?.state === 'on').length
   const airConditionersOn = DEVICE_GROUPS.airConditioners.filter((entityId) => entityIndex[entityId]?.state === 'on').length
   const activeScenes = SCENE_ENTITY_IDS.filter((entityId) => entityIndex[entityId]?.state === 'on').length
-  const openActivity = () => setActivityOpen(true)
+  const openChip = (chip) => setSelectedChip(chip)
+  const activeLightItems = DEVICE_GROUPS.lights
+    .filter((entityId) => entityIndex[entityId]?.state === 'on')
+    .map((entityId) => getEntityLabel(entityIndex[entityId], entityId))
+  const activeFanItems = DEVICE_GROUPS.fans
+    .filter((entityId) => entityIndex[entityId]?.state === 'on')
+    .map((entityId) => getEntityLabel(entityIndex[entityId], entityId))
+  const activeAirConditionerItems = DEVICE_GROUPS.airConditioners
+    .filter((entityId) => entityIndex[entityId]?.state === 'on')
+    .map((entityId) => getEntityLabel(entityIndex[entityId], entityId))
+  const activeSceneItems = SCENE_ENTITY_IDS
+    .filter((entityId) => entityIndex[entityId]?.state === 'on')
+    .map((entityId) => getEntityLabel(entityIndex[entityId], entityId))
   const headerChips = [
     activeDoors.length > 0 ? {
       key: 'doors',
       icon: DoorOpen,
       label: 'Doors',
       value: doorText,
+      items: activeDoors.map((door) => door.name),
     } : null,
     activeRooms.length > 0 ? {
       key: 'occupancy',
       icon: Home,
       label: 'Occupancy',
       value: occupancyText,
+      items: activeRooms.map((room) => room.name),
     } : null,
     lightsOn > 0 ? {
       key: 'lights',
       icon: Sun,
       label: 'Lights',
       value: formatCount(lightsOn, 'light'),
+      items: activeLightItems,
     } : null,
     fansOn > 0 ? {
       key: 'fans',
       icon: Fan,
       label: 'Fans',
       value: formatCount(fansOn, 'fan'),
+      items: activeFanItems,
     } : null,
     airConditionersOn > 0 ? {
       key: 'air-conditioners',
       icon: Snowflake,
       label: 'Air Conditioners',
       value: formatCount(airConditionersOn, 'air conditioner'),
+      items: activeAirConditionerItems,
     } : null,
     activeScenes > 0 ? {
       key: 'scenes',
       icon: Clapperboard,
       label: 'Scenes',
       value: formatCount(activeScenes, 'active scene'),
+      items: activeSceneItems,
     } : null,
   ].filter(Boolean)
 
@@ -154,19 +159,19 @@ export default function DashboardHeader({
   }, [menuOpen])
 
   useEffect(() => {
-    if (!activityOpen) {
+    if (!selectedChip) {
       return undefined
     }
 
     const handlePointerDown = (event) => {
-      if (!activityDialogRef.current?.contains(event.target)) {
-        setActivityOpen(false)
+      if (!chipDialogRef.current?.contains(event.target)) {
+        setSelectedChip(null)
       }
     }
 
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
-        setActivityOpen(false)
+        setSelectedChip(null)
       }
     }
 
@@ -176,17 +181,21 @@ export default function DashboardHeader({
       window.removeEventListener('pointerdown', handlePointerDown)
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [activityOpen])
+  }, [selectedChip])
 
   return (
     <div className="header">
       <div className="header-main">
+        <div className="header-greeting" aria-hidden="true">
+          <div className="header-greeting-title">{getWelcomeMessage()}</div>
+        </div>
+
         <div className="header-chip-row">
           {headerChips.map((chip) => {
             const Icon = chip.icon
 
             return (
-              <button className="header-chip header-chip-button" onClick={openActivity} type="button" key={chip.key}>
+              <button className="header-chip header-chip-button" onClick={() => openChip(chip)} type="button" key={chip.key}>
                 <Icon size={14} />
                 <div className="header-chip-body">
                   <span className="header-chip-label">{chip.label}</span>
@@ -271,33 +280,32 @@ export default function DashboardHeader({
         </div>
       </div>
 
-      {activityOpen ? (
+      {selectedChip ? (
         <div className="header-popup-backdrop">
-          <div className="header-popup card" ref={activityDialogRef} role="dialog" aria-label="Recent events">
+          <div className="header-popup card" ref={chipDialogRef} role="dialog" aria-label={selectedChip.label}>
             <div className="header-popup-head">
-              <div className="home-section-title">Recent events</div>
+              <div className="home-section-title">{selectedChip.label}</div>
               <button
                 className="header-popup-close"
-                onClick={() => setActivityOpen(false)}
-                title="Close recent events"
-                aria-label="Close recent events"
+                onClick={() => setSelectedChip(null)}
+                title={`Close ${selectedChip.label}`}
+                aria-label={`Close ${selectedChip.label}`}
                 type="button"
               >
                 <X size={16} />
               </button>
             </div>
 
-            {visibleActivity.length ? (
+            {selectedChip.items.length ? (
               <div className="home-activity-list">
-                {visibleActivity.map((item) => (
-                  <div className="home-activity-item" key={item.id}>
-                    <span className="home-activity-text">{item.label}</span>
-                    <span className="home-activity-time">{formatRelativeTime(item.timestamp)}</span>
+                {selectedChip.items.map((item) => (
+                  <div className="home-activity-item" key={item}>
+                    <span className="home-activity-text">{item}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="home-activity-empty">No recent activity</div>
+              <div className="home-activity-empty">No active items</div>
             )}
           </div>
         </div>
