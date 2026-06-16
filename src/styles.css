@@ -1002,22 +1002,23 @@ body{
 
 .header-chip-row{
   display:flex;
-  flex:1 1 auto;
-  flex-wrap:nowrap;
+  flex:0 1 auto;
+  flex-wrap:wrap;
+  margin-left:auto;
   gap:10px;
-  justify-content:center;
-  align-items:stretch;
+  justify-content:flex-end;
+  align-items:flex-start;
   min-width:0;
-  overflow:hidden;
 }
 
 .header-chip{
+  width:fit-content;
   display:flex;
   align-items:flex-start;
   gap:10px;
-  flex:1 1 0;
-  min-width:0;
-  max-width:none;
+  flex:0 1 auto;
+  min-width:max-content;
+  max-width:100%;
   padding:12px 14px;
   border:1px solid var(--border);
   border-radius:8px;
@@ -1965,7 +1966,8 @@ body{
 
   .header-chip-row{
     width:100%;
-    justify-content:center;
+    margin-left:0;
+    justify-content:flex-end;
   }
 
   .header-side{
@@ -2108,7 +2110,8 @@ body{
 
   .header-chip-row{
     width:100%;
-    justify-content:center;
+    margin-left:0;
+    justify-content:flex-end;
   }
 
   .grid{
@@ -2150,9 +2153,9 @@ body{
   }
 
   .header-chip{
-    min-width:0;
-    max-width:none;
-    width:100%;
+    width:fit-content;
+    min-width:max-content;
+    max-width:100%;
   }
 
   .home-shell{

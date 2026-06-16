@@ -99,6 +99,44 @@ export default function DashboardHeader({
   const airConditionersOn = DEVICE_GROUPS.airConditioners.filter((entityId) => entityIndex[entityId]?.state === 'on').length
   const activeScenes = SCENE_ENTITY_IDS.filter((entityId) => entityIndex[entityId]?.state === 'on').length
   const openActivity = () => setActivityOpen(true)
+  const headerChips = [
+    activeDoors.length > 0 ? {
+      key: 'doors',
+      icon: DoorOpen,
+      label: 'Doors',
+      value: doorText,
+    } : null,
+    activeRooms.length > 0 ? {
+      key: 'occupancy',
+      icon: Home,
+      label: 'Occupancy',
+      value: occupancyText,
+    } : null,
+    lightsOn > 0 ? {
+      key: 'lights',
+      icon: Sun,
+      label: 'Lights',
+      value: formatCount(lightsOn, 'light'),
+    } : null,
+    fansOn > 0 ? {
+      key: 'fans',
+      icon: Fan,
+      label: 'Fans',
+      value: formatCount(fansOn, 'fan'),
+    } : null,
+    airConditionersOn > 0 ? {
+      key: 'air-conditioners',
+      icon: Snowflake,
+      label: 'Air Conditioners',
+      value: formatCount(airConditionersOn, 'air conditioner'),
+    } : null,
+    activeScenes > 0 ? {
+      key: 'scenes',
+      icon: Clapperboard,
+      label: 'Scenes',
+      value: formatCount(activeScenes, 'active scene'),
+    } : null,
+  ].filter(Boolean)
 
   useEffect(() => {
     if (!menuOpen) {
@@ -144,48 +182,19 @@ export default function DashboardHeader({
     <div className="header">
       <div className="header-main">
         <div className="header-chip-row">
-          <button className="header-chip header-chip-button" onClick={openActivity} type="button">
-            <DoorOpen size={14} />
-            <div className="header-chip-body">
-              <span className="header-chip-label">Doors</span>
-              <span className="header-chip-value">{doorText}</span>
-            </div>
-          </button>
-          <button className="header-chip header-chip-button" onClick={openActivity} type="button">
-            <Home size={14} />
-            <div className="header-chip-body">
-              <span className="header-chip-label">Occupancy</span>
-              <span className="header-chip-value">{occupancyText}</span>
-            </div>
-          </button>
-          <button className="header-chip header-chip-button" onClick={openActivity} type="button">
-            <Sun size={14} />
-            <div className="header-chip-body">
-              <span className="header-chip-label">Lights</span>
-              <span className="header-chip-value">{formatCount(lightsOn, 'light')}</span>
-            </div>
-          </button>
-          <button className="header-chip header-chip-button" onClick={openActivity} type="button">
-            <Fan size={14} />
-            <div className="header-chip-body">
-              <span className="header-chip-label">Fans</span>
-              <span className="header-chip-value">{formatCount(fansOn, 'fan')}</span>
-            </div>
-          </button>
-          <button className="header-chip header-chip-button" onClick={openActivity} type="button">
-            <Snowflake size={14} />
-            <div className="header-chip-body">
-              <span className="header-chip-label">Air Conditioners</span>
-              <span className="header-chip-value">{formatCount(airConditionersOn, 'air conditioner')}</span>
-            </div>
-          </button>
-          <button className="header-chip header-chip-button" onClick={openActivity} type="button">
-            <Clapperboard size={14} />
-            <div className="header-chip-body">
-              <span className="header-chip-label">Scenes</span>
-              <span className="header-chip-value">{formatCount(activeScenes, 'active scene')}</span>
-            </div>
-          </button>
+          {headerChips.map((chip) => {
+            const Icon = chip.icon
+
+            return (
+              <button className="header-chip header-chip-button" onClick={openActivity} type="button" key={chip.key}>
+                <Icon size={14} />
+                <div className="header-chip-body">
+                  <span className="header-chip-label">{chip.label}</span>
+                  <span className="header-chip-value">{chip.value}</span>
+                </div>
+              </button>
+            )
+          })}
         </div>
 
         <div className="header-title-actions" ref={menuRef}>
