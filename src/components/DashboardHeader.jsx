@@ -32,15 +32,6 @@ const SCENE_ENTITY_IDS = [
   'input_boolean.movie_time',
 ]
 
-function getWelcomeMessage() {
-  const hour = new Date().getHours()
-
-  if (hour < 12) return 'Good morning'
-  if (hour < 17) return 'Good afternoon'
-  if (hour < 21) return 'Good evening'
-  return 'Good night'
-}
-
 function joinNatural(items) {
   if (!items.length) return ''
   if (items.length === 1) return items[0]
@@ -152,10 +143,6 @@ export default function DashboardHeader({
   return (
     <div className="header">
       <div className="header-main">
-        <div className="header-copy">
-          <div className="title">{getWelcomeMessage()}</div>
-        </div>
-
         <div className="header-chip-row">
           <button className="header-chip header-chip-button" onClick={openActivity} type="button">
             <DoorOpen size={14} />
