@@ -32,13 +32,6 @@ const SCENE_ENTITY_IDS = [
   'input_boolean.movie_time',
 ]
 
-function joinNatural(items) {
-  if (!items.length) return ''
-  if (items.length === 1) return items[0]
-  if (items.length === 2) return `${items[0]} and ${items[1]}`
-  return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`
-}
-
 function formatCount(count, singular, plural = `${singular}s`) {
   return `${count} ${count === 1 ? singular : plural}`
 }
@@ -75,12 +68,6 @@ export default function DashboardHeader({
   const chipDialogRef = useRef(null)
   const activeRooms = occupiedRooms.filter((room) => room.occupied)
   const activeDoors = openDoors.filter((door) => door.open)
-  const doorText = activeDoors.length ? joinNatural(activeDoors.map((door) => stripTrailingWord(door.name, 'Door'))) : 'All secure'
-  const occupancyText = activeRooms.length
-    ? (activeRooms.length <= 2
-      ? joinNatural(activeRooms.map((room) => room.name))
-      : formatCount(activeRooms.length, 'room'))
-    : 'No active rooms'
   const lightsOn = DEVICE_GROUPS.lights.filter((entityId) => entityIndex[entityId]?.state === 'on').length
   const fansOn = DEVICE_GROUPS.fans.filter((entityId) => entityIndex[entityId]?.state === 'on').length
   const airConditionersOn = DEVICE_GROUPS.airConditioners.filter((entityId) => entityIndex[entityId]?.state === 'on').length
@@ -103,14 +90,14 @@ export default function DashboardHeader({
       key: 'doors',
       icon: DoorOpen,
       label: 'Doors',
-      value: doorText,
+      value: formatCount(activeDoors.length, 'door'),
       items: activeDoors.map((door) => door.name),
     } : null,
     activeRooms.length > 0 ? {
       key: 'occupancy',
       icon: Home,
       label: 'Occupancy',
-      value: occupancyText,
+      value: formatCount(activeRooms.length, 'room'),
       items: activeRooms.map((room) => room.name),
     } : null,
     lightsOn > 0 ? {
