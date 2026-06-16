@@ -1635,6 +1635,10 @@ body{
   object-position:50% 62%;
 }
 
+.device-image-vacuum{
+  object-position:50% 58%;
+}
+
 .device-card-toggle{
   width:54px;
   height:32px;

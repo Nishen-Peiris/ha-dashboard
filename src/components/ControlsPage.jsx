@@ -239,6 +239,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 subtitle={vacuumSubtitle}
                 icon={Bot}
                 imageSrc={vacuumImage}
+                imageClassName="device-image-vacuum"
                 isOn={['cleaning', 'returning', 'docking'].includes(livingRoomVacuumStatus?.state)}
                 showToggle={false}
               />
