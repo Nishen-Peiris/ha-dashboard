@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import { History } from 'lucide-react'
 import MetricCard from './MetricCard'
 
 const SECOND_ROW_METRIC_TITLES = new Set([
@@ -189,32 +188,7 @@ function normalizeForecastItems(forecastItems = []) {
   })
 }
 
-function formatRelativeTime(timestamp) {
-  const parsed = new Date(timestamp)
-
-  if (Number.isNaN(parsed.getTime())) {
-    return ''
-  }
-
-  const diffSeconds = Math.round((parsed.getTime() - Date.now()) / 1000)
-  const formatter = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
-  const absoluteSeconds = Math.abs(diffSeconds)
-
-  if (absoluteSeconds < 60) {
-    return formatter.format(diffSeconds, 'second')
-  }
-
-  const diffMinutes = Math.round(diffSeconds / 60)
-  if (Math.abs(diffMinutes) < 60) {
-    return formatter.format(diffMinutes, 'minute')
-  }
-
-  const diffHours = Math.round(diffMinutes / 60)
-  return formatter.format(diffHours, 'hour')
-}
-
-export default function HomePage({ activity = [], metrics = [] }) {
-  const visibleActivity = activity.slice(0, 2)
+export default function HomePage({ metrics = [] }) {
   const primaryMetrics = metrics.filter((metric) => !SECOND_ROW_METRIC_TITLES.has(metric.title))
   const secondaryMetrics = metrics.filter((metric) => SECOND_ROW_METRIC_TITLES.has(metric.title))
 
@@ -225,7 +199,7 @@ export default function HomePage({ activity = [], metrics = [] }) {
           <div className="home-metrics-layout">
             <div className="home-metrics-stack">
               {primaryMetrics.length ? (
-                <div className="home-metrics-rail" aria-label="System metrics">
+                <div className="home-metrics-grid" aria-label="System metrics">
                   {primaryMetrics.map((metric) => (
                     <MetricCard key={metric.title} {...metric} />
                   ))}
@@ -233,37 +207,13 @@ export default function HomePage({ activity = [], metrics = [] }) {
               ) : null}
 
               {secondaryMetrics.length ? (
-                <div className="home-metrics-rail" aria-label="Device status metrics">
+                <div className="home-metrics-grid" aria-label="Device status metrics">
                   {secondaryMetrics.map((metric) => (
                     <MetricCard key={metric.title} {...metric} />
                   ))}
                 </div>
               ) : null}
             </div>
-
-            <motion.div whileHover={{ y: -4 }} className="card home-activity-card">
-              <div className="home-activity-head">
-                <div>
-                  <div className="home-section-title">Recent events</div>
-                </div>
-                <div className="home-activity-icon">
-                  <History size={18} />
-                </div>
-              </div>
-
-              {visibleActivity.length ? (
-                <div className="home-activity-list">
-                  {visibleActivity.map((item) => (
-                    <div className="home-activity-item" key={item.id}>
-                      <span className="home-activity-text">{item.label}</span>
-                      <span className="home-activity-time">{formatRelativeTime(item.timestamp)}</span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="home-activity-empty">No recent activity</div>
-              )}
-            </motion.div>
           </div>
         </section>
       ) : null}

@@ -66,6 +66,7 @@ export default function App() {
     <div className="dashboard">
       <div className="page-shell">
         <DashboardHeader
+          activity={activity}
           entityIndex={entityIndex}
           onPowerOff={handlePowerOff}
           onRestart={handleRestart}
@@ -90,10 +91,9 @@ export default function App() {
             }}
           />
 
-          <div className="page-content">
+          <div className={`page-content${activePage === 'home' ? ' page-content-home' : ''}`}>
             {activePage === 'home' ? (
               <HomePage
-                activity={activity}
                 metrics={metrics}
               />
             ) : (
