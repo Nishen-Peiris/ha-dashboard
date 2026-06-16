@@ -14,6 +14,7 @@ export default function ClimateCard({
   subtitle,
   isOn,
   imageSrc,
+  imageClassName,
   onToggle,
 }) {
   return (
@@ -31,7 +32,7 @@ export default function ClimateCard({
       <div className="climate-card-body">
         <div className="climate-card-hero">
           {imageSrc ? (
-            <img className="climate-card-image" src={imageSrc} alt="" aria-hidden="true" />
+            <img className={`climate-card-image${imageClassName ? ` ${imageClassName}` : ''}`} src={imageSrc} alt="" aria-hidden="true" />
           ) : (
             <div className="climate-card-icon-wrap">
               <Snowflake size={42} />

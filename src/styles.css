@@ -909,7 +909,7 @@ body{
 }
 
 .header-greeting-title{
-  color:var(--text-primary);
+  color:var(--text-secondary);
   font-size:34px;
   font-weight:700;
   line-height:1.05;
@@ -1567,6 +1567,30 @@ body{
   object-fit:contain;
   object-position:center;
   filter:drop-shadow(0 16px 24px rgba(2,6,23,.24));
+}
+
+.device-image-air-conditioner{
+  object-position:50% 58%;
+}
+
+.device-image-charger{
+  object-position:54% 54%;
+}
+
+.device-image-fan{
+  object-position:50% 58%;
+}
+
+.device-image-monitor{
+  object-position:50% 60%;
+}
+
+.device-image-pendant-light{
+  object-position:50% 70%;
+}
+
+.device-image-vaporizer{
+  object-position:50% 62%;
 }
 
 .device-card-toggle{

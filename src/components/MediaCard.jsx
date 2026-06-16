@@ -14,6 +14,7 @@ export default function MediaCard({
   subtitle,
   isOn,
   imageSrc,
+  imageClassName,
   onToggle,
 }) {
   return (
@@ -31,7 +32,7 @@ export default function MediaCard({
       <div className="media-card-body">
         <div className="media-card-hero">
           {imageSrc ? (
-            <img className="media-card-image" src={imageSrc} alt="" aria-hidden="true" />
+            <img className={`media-card-image${imageClassName ? ` ${imageClassName}` : ''}`} src={imageSrc} alt="" aria-hidden="true" />
           ) : (
             <div className="media-card-icon-wrap">
               <Monitor size={46} />

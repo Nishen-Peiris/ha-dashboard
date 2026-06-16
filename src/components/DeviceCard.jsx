@@ -19,6 +19,7 @@ export default function DeviceCard({
   onSubtitleSelect,
   icon: Icon,
   imageSrc,
+  imageClassName,
   isOn,
   onToggle,
 }) {
@@ -66,7 +67,7 @@ export default function DeviceCard({
       <div className="device-card-body">
         <div className="device-card-visual">
           {imageSrc ? (
-            <img className="device-card-image" src={imageSrc} alt="" aria-hidden="true" />
+            <img className={`device-card-image${imageClassName ? ` ${imageClassName}` : ''}`} src={imageSrc} alt="" aria-hidden="true" />
           ) : (
             <div className="device-card-icon-wrap">
               <Icon size={44} />

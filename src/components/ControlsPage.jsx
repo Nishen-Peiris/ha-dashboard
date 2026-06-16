@@ -150,6 +150,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 title="Corner Light"
                 icon={LampFloor}
                 imageSrc={pendantLightImage}
+                imageClassName="device-image-pendant-light"
                 isOn={isCornerLightOn}
                 onToggle={() => onCallService('light', 'toggle', undefined, { entity_id: ['light.corner_light'] })}
               />
@@ -157,6 +158,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 title="Fan"
                 icon={Fan}
                 imageSrc={fanImage}
+                imageClassName="device-image-fan"
                 isOn={isLivingRoomFanOn}
                 onToggle={() => onCallService('fan', 'toggle', undefined, { entity_id: ['fan.living_room_fan'] })}
               />
@@ -164,6 +166,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 title="Sony Bravia"
                 icon={Monitor}
                 imageSrc={monitorImage}
+                imageClassName="device-image-monitor"
                 isOn={isLivingRoomSonyTvOn}
                 onToggle={() =>
                   onCallService('media_player', isLivingRoomSonyTvOn ? 'turn_off' : 'turn_on', undefined, { entity_id: ['media_player.living_room_sony_tv'] })
@@ -173,6 +176,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 title="Apple TV"
                 subtitle={isAppleTvOn ? `${appleTvVolume}%` : undefined}
                 imageSrc={monitorImage}
+                imageClassName="device-image-monitor"
                 isOn={isAppleTvOn}
                 onToggle={() =>
                   onCallService('media_player', isAppleTvOn ? 'turn_off' : 'turn_on', undefined, { entity_id: ['media_player.apple_tv'] })
@@ -207,6 +211,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 }}
                 icon={BatteryCharging}
                 imageSrc={chargerImage}
+                imageClassName="device-image-charger"
                 isOn={isLivingRoomChargerOn}
                 onToggle={() => {
                   setOpenSelector(null)
@@ -221,6 +226,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 subtitle={isFrontRoomLightOn ? `${Math.round(frontRoomLightLevel)}%` : undefined}
                 icon={Lightbulb}
                 imageSrc={pendantLightImage}
+                imageClassName="device-image-pendant-light"
                 isOn={isFrontRoomLightOn}
                 onToggle={() => onCallService('light', 'toggle', undefined, { entity_id: ['light.front_room_light'] })}
               />
@@ -242,6 +248,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 title="Air Conditioner"
                 subtitle={formatClimateSubtitle(isFrontRoomAcOn, frontRoomAcLevel, frontRoomAcFilterRemaining)}
                 imageSrc={airConditionerImage}
+                imageClassName="device-image-air-conditioner"
                 isOn={isFrontRoomAcOn}
                 onToggle={() => onCallService('input_boolean', 'toggle', undefined, { entity_id: ['input_boolean.front_room_ac_power'] })}
               />
@@ -249,6 +256,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 title="Vaporizer"
                 icon={Droplets}
                 imageSrc={vaporizerImage}
+                imageClassName="device-image-vaporizer"
                 isOn={isFrontRoomStreamingLightsOn}
                 onToggle={() => onCallService('switch', 'toggle', undefined, { entity_id: ['switch.streaming_lights'] })}
               />
@@ -256,6 +264,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 title="Himashi's Monitor"
                 icon={Monitor}
                 imageSrc={monitorImage}
+                imageClassName="device-image-monitor"
                 isOn={isFrontRoomMonitorOn}
                 onToggle={() => onCallService('switch', 'toggle', undefined, { entity_id: ['switch.himashi_s_monitor'] })}
               />
@@ -267,6 +276,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               subtitle={isOutdoorLightOn ? `${outdoorLightBrightness}%` : undefined}
               icon={Lightbulb}
               imageSrc={pendantLightImage}
+              imageClassName="device-image-pendant-light"
               isOn={isOutdoorLightOn}
               onToggle={() => onCallService('light', 'toggle', undefined, { entity_id: ['light.outdoor_light'] })}
             />
@@ -278,6 +288,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 subtitle={isKitchenLightOn ? `${kitchenLightBrightness}%` : undefined}
                 icon={Lightbulb}
                 imageSrc={pendantLightImage}
+                imageClassName="device-image-pendant-light"
                 isOn={isKitchenLightOn}
                 onToggle={() => onCallService('light', 'toggle', undefined, { entity_id: ['light.kitchen_light'] })}
               />
@@ -302,6 +313,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 title="Table Lamp"
                 icon={Lightbulb}
                 imageSrc={pendantLightImage}
+                imageClassName="device-image-pendant-light"
                 isOn={isBedroomTableLampOn}
                 onToggle={() => onCallService('switch', 'toggle', undefined, { entity_id: ['switch.table_lamp'] })}
               />
@@ -309,6 +321,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 title="Fan"
                 icon={Fan}
                 imageSrc={fanImage}
+                imageClassName="device-image-fan"
                 isOn={isBedroomFanOn}
                 onToggle={() => onCallService('fan', 'toggle', undefined, { entity_id: ['fan.bedroom_fan'] })}
               />
@@ -320,6 +333,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                   bedroomAirConditionerFilterRemaining,
                 )}
                 imageSrc={airConditionerImage}
+                imageClassName="device-image-air-conditioner"
                 isOn={isBedroomAirConditionerOn}
                 onToggle={() => onCallService('input_boolean', 'toggle', undefined, { entity_id: ['input_boolean.bedroom_ac_power'] })}
               />
@@ -334,6 +348,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 title="Vaporizer"
                 icon={Droplets}
                 imageSrc={vaporizerImage}
+                imageClassName="device-image-vaporizer"
                 isOn={isBedroomVaporizerOn}
                 onToggle={() => onCallService('switch', 'toggle', undefined, { entity_id: ['switch.bedroom_vaporizer'] })}
               />
@@ -341,6 +356,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 title="Sony Bravia"
                 subtitle={isBedroomSonyTvOn ? `${bedroomSonyTvVolume}%` : undefined}
                 imageSrc={monitorImage}
+                imageClassName="device-image-monitor"
                 isOn={isBedroomSonyTvOn}
                 onToggle={() =>
                   onCallService('media_player', isBedroomSonyTvOn ? 'turn_off' : 'turn_on', undefined, { entity_id: ['media_player.bedroom_sony_tv'] })
@@ -354,6 +370,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               subtitle={isBackRoomLightOn ? `${backRoomLightBrightness}%` : undefined}
               icon={Lightbulb}
               imageSrc={pendantLightImage}
+              imageClassName="device-image-pendant-light"
               isOn={isBackRoomLightOn}
               onToggle={() => onCallService('light', 'toggle', undefined, { entity_id: ['light.back_room_light'] })}
             />
@@ -365,6 +382,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               subtitle={isBathroomLightOn ? `${bathroomLightBrightness}%` : undefined}
               icon={Lightbulb}
               imageSrc={pendantLightImage}
+              imageClassName="device-image-pendant-light"
               isOn={isBathroomLightOn}
               onToggle={() => onCallService('light', 'toggle', undefined, { entity_id: ['light.bathroom_light'] })}
             />
