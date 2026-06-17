@@ -1763,6 +1763,65 @@ body{
   color:#166534;
 }
 
+.vacuum-room-popup{
+  width:min(420px, calc(100vw - 32px));
+}
+
+.vacuum-room-body{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+.vacuum-room-group{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.vacuum-room-group-title{
+  color:var(--text-secondary);
+  font-size:13px;
+  font-weight:700;
+}
+
+.vacuum-room-chip-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.vacuum-room-chip{
+  min-width:96px;
+  min-height:36px;
+  border:1px solid var(--border-strong);
+  border-radius:8px;
+  background:var(--surface-alt);
+  color:var(--text-primary);
+  padding:0 12px;
+  font:inherit;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  transition:background .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.vacuum-room-chip:hover{
+  border-color:var(--border);
+  transform:translateY(-1px);
+}
+
+.vacuum-room-chip:focus-visible{
+  outline:2px solid rgba(14,165,233,.45);
+  outline-offset:2px;
+}
+
+.vacuum-room-empty{
+  color:var(--text-muted);
+  font-size:13px;
+  font-weight:600;
+}
+
 .device-card-subtitle-menu{
   position:absolute;
   top:calc(100% + 8px);
