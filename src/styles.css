@@ -672,6 +672,29 @@ body{
   line-height:1.3;
 }
 
+.controls-brightness-popup{
+  width:min(420px, 100%);
+}
+
+.controls-brightness-body{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+.controls-brightness-slider{
+  width:100%;
+  margin:0;
+  accent-color:#22c55e;
+}
+
+.controls-brightness-value{
+  color:var(--text-primary);
+  font-size:22px;
+  font-weight:700;
+  text-align:center;
+}
+
 .home-section-heading{
   min-width:0;
 }
@@ -1484,6 +1507,10 @@ body{
 .device-card{
   height:220px;
   padding:16px;
+}
+
+.device-card.has-brightness-control{
+  cursor:pointer;
 }
 
 .device-card.active,

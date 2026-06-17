@@ -21,11 +21,30 @@ export default function DeviceCard({
   imageSrc,
   imageClassName,
   isOn,
+  onCardClick,
   onToggle,
   showToggle = true,
 }) {
+  const isInteractiveCard = typeof onCardClick === 'function'
+
   return (
-    <motion.div whileHover={{ y: -4 }} className={`card device-card${subtitle ? ' has-subtitle' : ''}${isOn ? ' active' : ''}`}>
+    <motion.div
+      whileHover={{ y: -4 }}
+      className={`card device-card${subtitle ? ' has-subtitle' : ''}${isOn ? ' active' : ''}${isInteractiveCard ? ' has-brightness-control' : ''}`}
+      onClick={onCardClick}
+      onKeyDown={(event) => {
+        if (!isInteractiveCard) {
+          return
+        }
+
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault()
+          onCardClick()
+        }
+      }}
+      role={isInteractiveCard ? 'button' : undefined}
+      tabIndex={isInteractiveCard ? 0 : undefined}
+    >
       <div className="card-head device-card-head">
         <div className="device-card-head-main">
           <div className="card-title device-card-title">{title}</div>
@@ -34,7 +53,10 @@ export default function DeviceCard({
               <div className="device-card-subtitle-wrap">
                 <button
                   className={`device-card-subtitle-button${subtitleMenuOpen ? ' active' : ''}`}
-                  onClick={onSubtitleClick}
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    onSubtitleClick()
+                  }}
                   type="button"
                 >
                   <span>{subtitleMenuLabel ?? subtitle}</span>
@@ -46,7 +68,10 @@ export default function DeviceCard({
                       <button
                         key={option}
                         className={`device-card-subtitle-option${subtitle === option ? ' active' : ''}`}
-                        onClick={() => onSubtitleSelect?.(option)}
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          onSubtitleSelect?.(option)
+                        }}
                         type="button"
                       >
                         {option}
@@ -62,7 +87,11 @@ export default function DeviceCard({
         </div>
         {showToggle ? (
           <div className="device-card-controls">
-            <Toggle checked={isOn} onClick={onToggle} />
+            <Toggle checked={isOn} onClick={(event) => {
+              event.stopPropagation()
+              onToggle?.()
+            }}
+            />
           </div>
         ) : null}
       </div>
