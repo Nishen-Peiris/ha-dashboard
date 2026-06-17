@@ -83,46 +83,11 @@ function formatClimateSubtitle(isOn, temperature, filterRemaining) {
   return parts.join(' • ') || undefined
 }
 
-function parseVacuumPresets(entity) {
-  const rawValue = entity?.attributes?.['vacuum.user_define_sweep_cfg']
-
-  if (typeof rawValue !== 'string' || !rawValue.trim()) {
-    return []
-  }
-
-  try {
-    const parsedValue = JSON.parse(rawValue)
-    const userLabels = Array.isArray(parsedValue?.user_labels) ? parsedValue.user_labels : []
-
-    return userLabels
-      .map((label) => {
-        const roomIds = Array.isArray(label?.room_ids)
-          ? label.room_ids.filter((roomId) => Number.isInteger(roomId))
-          : []
-
-        if (!roomIds.length) {
-          return null
-        }
-
-        return {
-          id: label.id ?? `${label.name}-${roomIds.join('-')}`,
-          name: typeof label.name === 'string' && label.name.trim() ? label.name.trim() : `Preset ${label.id ?? ''}`.trim(),
-          roomIds,
-        }
-      })
-      .filter(Boolean)
-  } catch {
-    return []
-  }
-}
-
 export default function ControlsPage({ selectedRoom, entityIndex, onCallService }) {
   const [openSelector, setOpenSelector] = useState(null)
   const [adjustmentModal, setAdjustmentModal] = useState(null)
-  const [vacuumRoomModalOpen, setVacuumRoomModalOpen] = useState(false)
   const [draftAdjustment, setDraftAdjustment] = useState(0)
   const adjustmentDialogRef = useRef(null)
-  const vacuumRoomDialogRef = useRef(null)
   const appleTv = entityIndex['media_player.apple_tv']
   const cornerLight = entityIndex['light.corner_light']
   const bedroomAirPurifier = entityIndex['fan.xiaomi_cpa4_680c_air_purifier']
@@ -203,7 +168,6 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
     ? (deviceToCharge?.state ?? 'Device To Charge')
     : undefined
   const vacuumSubtitle = formatStatusLabel(livingRoomVacuumStatus)
-  const vacuumPresets = parseVacuumPresets(entityIndex['vacuum.xiaomi_ov51gl_cfcf_robot_cleaner'])
   const washingMachineSubtitle = formatStatusLabel(bathroomWashingMachineStatus)
   const handleLightBrightnessChange = (entityId, brightness) => {
     onCallService('light', 'turn_on', { brightness_pct: brightness }, { entity_id: [entityId] })
@@ -221,21 +185,6 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
   const openAdjustmentModal = (config) => {
     setAdjustmentModal(config)
     setDraftAdjustment(config.value)
-  }
-  const handleVacuumRoomClean = (roomId) => {
-    onCallService(
-      'select',
-      'select_option',
-      { option: 'Sweep Before Mopping' },
-      { entity_id: ['select.xiaomi_ov51gl_cfcf_sweep_mop_type'] },
-    )
-    onCallService(
-      'vacuum',
-      'send_command',
-      { command: 'app_segment_clean', params: [roomId] },
-      { entity_id: ['vacuum.xiaomi_ov51gl_cfcf_robot_cleaner'] },
-    )
-    setVacuumRoomModalOpen(false)
   }
 
   useEffect(() => {
@@ -267,31 +216,6 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [adjustmentModal, draftAdjustment])
-
-  useEffect(() => {
-    if (!vacuumRoomModalOpen) {
-      return undefined
-    }
-
-    const handlePointerDown = (event) => {
-      if (!vacuumRoomDialogRef.current?.contains(event.target)) {
-        setVacuumRoomModalOpen(false)
-      }
-    }
-
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') {
-        setVacuumRoomModalOpen(false)
-      }
-    }
-
-    window.addEventListener('pointerdown', handlePointerDown)
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      window.removeEventListener('pointerdown', handlePointerDown)
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [vacuumRoomModalOpen])
 
   return (
     <div className="rooms-shell">
@@ -376,7 +300,6 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 imageSrc={vacuumImage}
                 imageClassName="device-image-vacuum"
                 isOn={['cleaning', 'returning', 'docking'].includes(livingRoomVacuumStatus?.state)}
-                onCardClick={() => setVacuumRoomModalOpen(true)}
                 headerControl={(
                   <button
                     className="device-card-action-button"
@@ -681,47 +604,6 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 }}
               />
               <div className="controls-brightness-value">{adjustmentModal.displayValue(draftAdjustment)}</div>
-            </div>
-          </div>
-        </div>
-      ) : null}
-
-      {vacuumRoomModalOpen ? (
-        <div className="header-popup-backdrop">
-          <div className="header-popup vacuum-room-popup card" ref={vacuumRoomDialogRef} role="dialog" aria-label="Vacuum rooms">
-            <div className="header-popup-head">
-              <div className="home-section-title">Vacuum Rooms</div>
-              <button
-                className="header-popup-close"
-                onClick={() => setVacuumRoomModalOpen(false)}
-                title="Close Vacuum Rooms"
-                aria-label="Close Vacuum Rooms"
-                type="button"
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            <div className="vacuum-room-body">
-              {vacuumPresets.length ? vacuumPresets.map((preset) => (
-                <div className="vacuum-room-group" key={preset.id}>
-                  <div className="vacuum-room-group-title">{preset.name}</div>
-                  <div className="vacuum-room-chip-list">
-                    {preset.roomIds.map((roomId) => (
-                      <button
-                        key={`${preset.id}-${roomId}`}
-                        className="vacuum-room-chip"
-                        onClick={() => handleVacuumRoomClean(roomId)}
-                        type="button"
-                      >
-                        Room ID {roomId}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )) : (
-                <div className="vacuum-room-empty">No room IDs exposed by the vacuum.</div>
-              )}
             </div>
           </div>
         </div>
