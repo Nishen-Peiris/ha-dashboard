@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { BatteryCharging, Bot, Coffee, Droplets, Fan, LampFloor, Lightbulb, Monitor, Plug, Wind, X } from 'lucide-react'
+import { BatteryCharging, Bot, Coffee, Droplets, Fan, LampFloor, Lightbulb, Monitor, Plug, Power, Wind, X } from 'lucide-react'
 import ClimateCard from './ClimateCard'
 import DeviceCard from './DeviceCard'
 import MediaCard from './MediaCard'
@@ -300,6 +300,19 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 imageSrc={vacuumImage}
                 imageClassName="device-image-vacuum"
                 isOn={['cleaning', 'returning', 'docking'].includes(livingRoomVacuumStatus?.state)}
+                headerControl={(
+                  <button
+                    className="device-card-action-button"
+                    aria-label="Start vacuum cleanup"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      onCallService('button', 'press', undefined, { entity_id: ['button.xiaomi_ov51gl_cfcf_start_dust_arrest'] })
+                    }}
+                    type="button"
+                  >
+                    <Power size={16} />
+                  </button>
+                )}
                 showToggle={false}
               />
           </div>

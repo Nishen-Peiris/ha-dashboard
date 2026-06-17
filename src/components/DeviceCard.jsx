@@ -23,6 +23,7 @@ export default function DeviceCard({
   isOn,
   onCardClick,
   onToggle,
+  headerControl,
   showToggle = true,
 }) {
   const isInteractiveCard = typeof onCardClick === 'function'
@@ -85,7 +86,9 @@ export default function DeviceCard({
             )
           ) : null}
         </div>
-        {showToggle ? (
+        {headerControl ? (
+          <div className="device-card-controls">{headerControl}</div>
+        ) : showToggle ? (
           <div className="device-card-controls">
             <Toggle checked={isOn} onClick={(event) => {
               event.stopPropagation()

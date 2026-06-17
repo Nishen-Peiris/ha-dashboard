@@ -1726,6 +1726,43 @@ body{
   border-color:#cbd5e1;
 }
 
+.device-card-action-button{
+  width:32px;
+  height:32px;
+  border:1px solid var(--border-strong);
+  border-radius:999px;
+  background:var(--surface-alt);
+  color:var(--text-secondary);
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);
+  transition:background .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+.device-card-action-button:hover{
+  border-color:var(--border);
+  color:var(--text-primary);
+  transform:translateY(-1px);
+}
+
+.device-card-action-button:focus-visible{
+  outline:2px solid rgba(14,165,233,.45);
+  outline-offset:2px;
+}
+
+.device-card.active .device-card-action-button{
+  border-color:rgba(125,211,252,.4);
+  background:rgba(14,165,233,.14);
+  color:#e0f2fe;
+}
+
+[data-theme='light'] .device-card.active .device-card-action-button{
+  border-color:rgba(34,197,94,.3);
+  background:rgba(34,197,94,.12);
+  color:#166534;
+}
+
 .device-card-subtitle-menu{
   position:absolute;
   top:calc(100% + 8px);
