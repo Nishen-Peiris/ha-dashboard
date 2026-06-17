@@ -15,17 +15,40 @@ export default function ClimateCard({
   isOn,
   imageSrc,
   imageClassName,
+  onCardClick,
   onToggle,
 }) {
+  const isInteractiveCard = typeof onCardClick === 'function'
+
   return (
-    <motion.div whileHover={{ y: -4 }} className={`card climate-card${subtitle ? ' has-subtitle' : ''}${isOn ? ' active' : ''}`}>
+    <motion.div
+      whileHover={{ y: -4 }}
+      className={`card climate-card${subtitle ? ' has-subtitle' : ''}${isOn ? ' active' : ''}${isInteractiveCard ? ' has-adjustment-control' : ''}`}
+      onClick={onCardClick}
+      onKeyDown={(event) => {
+        if (!isInteractiveCard) {
+          return
+        }
+
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault()
+          onCardClick()
+        }
+      }}
+      role={isInteractiveCard ? 'button' : undefined}
+      tabIndex={isInteractiveCard ? 0 : undefined}
+    >
       <div className="card-head climate-card-head">
         <div className="climate-card-head-main">
           <div className="card-title climate-card-title">{title}</div>
           {subtitle ? <div className="climate-card-subtitle">{subtitle}</div> : null}
         </div>
         <div className="climate-card-controls">
-          <Toggle checked={isOn} onClick={onToggle} />
+          <Toggle checked={isOn} onClick={(event) => {
+            event.stopPropagation()
+            onToggle?.()
+          }}
+          />
         </div>
       </div>
 

@@ -85,9 +85,9 @@ function formatClimateSubtitle(isOn, temperature, filterRemaining) {
 
 export default function ControlsPage({ selectedRoom, entityIndex, onCallService }) {
   const [openSelector, setOpenSelector] = useState(null)
-  const [brightnessModal, setBrightnessModal] = useState(null)
-  const [draftBrightness, setDraftBrightness] = useState(0)
-  const brightnessDialogRef = useRef(null)
+  const [adjustmentModal, setAdjustmentModal] = useState(null)
+  const [draftAdjustment, setDraftAdjustment] = useState(0)
+  const adjustmentDialogRef = useRef(null)
   const appleTv = entityIndex['media_player.apple_tv']
   const cornerLight = entityIndex['light.corner_light']
   const bedroomAirPurifier = entityIndex['fan.xiaomi_cpa4_680c_air_purifier']
@@ -172,37 +172,40 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
   const handleLightBrightnessChange = (entityId, brightness) => {
     onCallService('light', 'turn_on', { brightness_pct: brightness }, { entity_id: [entityId] })
   }
-  const commitModalBrightness = () => {
-    if (!brightnessModal) {
+  const handleTemperatureChange = (entityId, value) => {
+    onCallService('input_number', 'set_value', { value }, { entity_id: [entityId] })
+  }
+  const commitAdjustment = () => {
+    if (!adjustmentModal) {
       return
     }
 
-    handleLightBrightnessChange(brightnessModal.entityId, draftBrightness)
+    adjustmentModal.onCommit(draftAdjustment)
   }
-  const openBrightnessModal = (config) => {
-    setBrightnessModal(config)
-    setDraftBrightness(config.brightness)
+  const openAdjustmentModal = (config) => {
+    setAdjustmentModal(config)
+    setDraftAdjustment(config.value)
   }
 
   useEffect(() => {
-    if (!brightnessModal) {
+    if (!adjustmentModal) {
       return undefined
     }
 
     const handlePointerDown = (event) => {
-      if (!brightnessDialogRef.current?.contains(event.target)) {
-        setBrightnessModal(null)
+      if (!adjustmentDialogRef.current?.contains(event.target)) {
+        setAdjustmentModal(null)
       }
     }
 
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
-        setBrightnessModal(null)
+        setAdjustmentModal(null)
         return
       }
 
       if (event.key === 'Enter') {
-        commitModalBrightness()
+        commitAdjustment()
       }
     }
 
@@ -212,7 +215,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
       window.removeEventListener('pointerdown', handlePointerDown)
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [brightnessModal, draftBrightness])
+  }, [adjustmentModal, draftAdjustment])
 
   return (
     <div className="rooms-shell">
@@ -305,10 +308,14 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               <DeviceCard
                 title="Light"
                 subtitle={isFrontRoomLightOn ? `${Math.round(frontRoomLightLevel)}%` : undefined}
-                onCardClick={() => openBrightnessModal({
+                onCardClick={() => openAdjustmentModal({
                   title: 'Front Room Light',
-                  entityId: 'light.front_room_light',
-                  brightness: Math.max(1, Math.round(frontRoomLightLevel)),
+                  value: Math.max(1, Math.round(frontRoomLightLevel)),
+                  min: 1,
+                  max: 100,
+                  step: 1,
+                  displayValue: (value) => `${value}%`,
+                  onCommit: (value) => handleLightBrightnessChange('light.front_room_light', value),
                 })}
                 icon={Lightbulb}
                 imageSrc={pendantLightImage}
@@ -319,10 +326,14 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               <DeviceCard
                 title="Light Strip"
                 subtitle={isLightStripOn ? `${lightStripBrightness}%` : undefined}
-                onCardClick={() => openBrightnessModal({
+                onCardClick={() => openAdjustmentModal({
                   title: 'Light Strip',
-                  entityId: 'light.light_strip',
-                  brightness: Math.max(1, lightStripBrightness),
+                  value: Math.max(1, lightStripBrightness),
+                  min: 1,
+                  max: 100,
+                  step: 1,
+                  displayValue: (value) => `${value}%`,
+                  onCommit: (value) => handleLightBrightnessChange('light.light_strip', value),
                 })}
                 icon={Lightbulb}
                 imageSrc={lightStripImage}
@@ -339,6 +350,15 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               <ClimateCard
                 title="Air Conditioner"
                 subtitle={formatClimateSubtitle(isFrontRoomAcOn, frontRoomAcLevel, frontRoomAcFilterRemaining)}
+                onCardClick={() => openAdjustmentModal({
+                  title: 'Front Room Air Conditioner',
+                  value: frontRoomAcLevel,
+                  min: 26,
+                  max: 30,
+                  step: frontRoomAcTemperature?.attributes?.step ?? 1,
+                  displayValue: (value) => `${Math.round(value)}°C`,
+                  onCommit: (value) => handleTemperatureChange('input_number.front_room_ac_temperature', value),
+                })}
                 imageSrc={airConditionerImage}
                 imageClassName="device-image-air-conditioner"
                 isOn={isFrontRoomAcOn}
@@ -366,10 +386,14 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
             <DeviceCard
               title="Light"
               subtitle={isOutdoorLightOn ? `${outdoorLightBrightness}%` : undefined}
-              onCardClick={() => openBrightnessModal({
+              onCardClick={() => openAdjustmentModal({
                 title: 'Outdoor Light',
-                entityId: 'light.outdoor_light',
-                brightness: Math.max(1, outdoorLightBrightness),
+                value: Math.max(1, outdoorLightBrightness),
+                min: 1,
+                max: 100,
+                step: 1,
+                displayValue: (value) => `${value}%`,
+                onCommit: (value) => handleLightBrightnessChange('light.outdoor_light', value),
               })}
               icon={Lightbulb}
               imageSrc={pendantLightImage}
@@ -383,10 +407,14 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               <DeviceCard
                 title="Light"
                 subtitle={isKitchenLightOn ? `${kitchenLightBrightness}%` : undefined}
-                onCardClick={() => openBrightnessModal({
+                onCardClick={() => openAdjustmentModal({
                   title: 'Kitchen Light',
-                  entityId: 'light.kitchen_light',
-                  brightness: Math.max(1, kitchenLightBrightness),
+                  value: Math.max(1, kitchenLightBrightness),
+                  min: 1,
+                  max: 100,
+                  step: 1,
+                  displayValue: (value) => `${value}%`,
+                  onCommit: (value) => handleLightBrightnessChange('light.kitchen_light', value),
                 })}
                 icon={Lightbulb}
                 imageSrc={pendantLightImage}
@@ -434,6 +462,15 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                   bedroomAirConditionerTargetTemperature,
                   bedroomAirConditionerFilterRemaining,
                 )}
+                onCardClick={() => openAdjustmentModal({
+                  title: 'Bedroom Air Conditioner',
+                  value: bedroomAirConditionerTargetTemperature,
+                  min: 26,
+                  max: 30,
+                  step: bedroomAirConditionerTemperature?.attributes?.step ?? 1,
+                  displayValue: (value) => `${Math.round(value)}°C`,
+                  onCommit: (value) => handleTemperatureChange('input_number.bedroom_ac_temperature', value),
+                })}
                 imageSrc={airConditionerImage}
                 imageClassName="device-image-air-conditioner"
                 isOn={isBedroomAirConditionerOn}
@@ -470,10 +507,14 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
             <DeviceCard
               title="Light"
               subtitle={isBackRoomLightOn ? `${backRoomLightBrightness}%` : undefined}
-              onCardClick={() => openBrightnessModal({
+              onCardClick={() => openAdjustmentModal({
                 title: 'Back Room Light',
-                entityId: 'light.back_room_light',
-                brightness: Math.max(1, backRoomLightBrightness),
+                value: Math.max(1, backRoomLightBrightness),
+                min: 1,
+                max: 100,
+                step: 1,
+                displayValue: (value) => `${value}%`,
+                onCommit: (value) => handleLightBrightnessChange('light.back_room_light', value),
               })}
               icon={Lightbulb}
               imageSrc={pendantLightImage}
@@ -487,10 +528,14 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
             <DeviceCard
               title="Light"
               subtitle={isBathroomLightOn ? `${bathroomLightBrightness}%` : undefined}
-              onCardClick={() => openBrightnessModal({
+              onCardClick={() => openAdjustmentModal({
                 title: 'Bathroom Light',
-                entityId: 'light.bathroom_light',
-                brightness: Math.max(1, bathroomLightBrightness),
+                value: Math.max(1, bathroomLightBrightness),
+                min: 1,
+                max: 100,
+                step: 1,
+                displayValue: (value) => `${value}%`,
+                onCommit: (value) => handleLightBrightnessChange('light.bathroom_light', value),
               })}
               icon={Lightbulb}
               imageSrc={pendantLightImage}
@@ -512,16 +557,16 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
         )}
       </section>
 
-      {brightnessModal ? (
+      {adjustmentModal ? (
         <div className="header-popup-backdrop">
-          <div className="header-popup controls-brightness-popup card" ref={brightnessDialogRef} role="dialog" aria-label={brightnessModal.title}>
+          <div className="header-popup controls-brightness-popup card" ref={adjustmentDialogRef} role="dialog" aria-label={adjustmentModal.title}>
             <div className="header-popup-head">
-              <div className="home-section-title">{brightnessModal.title}</div>
+              <div className="home-section-title">{adjustmentModal.title}</div>
               <button
                 className="header-popup-close"
-                onClick={() => setBrightnessModal(null)}
-                title={`Close ${brightnessModal.title}`}
-                aria-label={`Close ${brightnessModal.title}`}
+                onClick={() => setAdjustmentModal(null)}
+                title={`Close ${adjustmentModal.title}`}
+                aria-label={`Close ${adjustmentModal.title}`}
                 type="button"
               >
                 <X size={16} />
@@ -532,20 +577,20 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               <input
                 className="controls-brightness-slider"
                 type="range"
-                min="1"
-                max="100"
-                step="1"
-                value={draftBrightness}
-                onChange={(event) => setDraftBrightness(Number(event.target.value))}
-                onMouseUp={commitModalBrightness}
-                onTouchEnd={commitModalBrightness}
+                min={adjustmentModal.min}
+                max={adjustmentModal.max}
+                step={adjustmentModal.step}
+                value={draftAdjustment}
+                onChange={(event) => setDraftAdjustment(Number(event.target.value))}
+                onMouseUp={commitAdjustment}
+                onTouchEnd={commitAdjustment}
                 onKeyUp={(event) => {
                   if (event.key.startsWith('Arrow') || event.key === 'Home' || event.key === 'End' || event.key === 'PageUp' || event.key === 'PageDown') {
-                    commitModalBrightness()
+                    commitAdjustment()
                   }
                 }}
               />
-              <div className="controls-brightness-value">{draftBrightness}%</div>
+              <div className="controls-brightness-value">{adjustmentModal.displayValue(draftAdjustment)}</div>
             </div>
           </div>
         </div>

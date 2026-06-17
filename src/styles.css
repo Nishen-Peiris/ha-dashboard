@@ -1513,6 +1513,10 @@ body{
   cursor:pointer;
 }
 
+.climate-card.has-adjustment-control{
+  cursor:pointer;
+}
+
 .device-card.active,
 .media-card.active,
 .climate-card.active{
