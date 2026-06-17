@@ -7,19 +7,25 @@ import { useHomeAssistant } from './hooks/useHomeAssistant'
 
 const HOME_IDLE_TIMEOUT_MS = 5 * 60 * 1000
 const THEME_STORAGE_KEY = 'ha-dashboard-theme'
+const TITLE_BAR_VISIBLE_STORAGE_KEY = 'ha-dashboard-title-bar-visible'
 
 export default function App() {
   const [activePage, setActivePage] = useState('home')
   const [selectedRoom, setSelectedRoom] = useState('Kitchen')
   const [theme, setTheme] = useState(() => window.localStorage.getItem(THEME_STORAGE_KEY) ?? 'dark')
+  const [showTitleBar, setShowTitleBar] = useState(() => window.localStorage.getItem(TITLE_BAR_VISIBLE_STORAGE_KEY) !== 'false')
   const { callService, dashboardData } = useHomeAssistant()
-  const { activity, doors, entityIndex, metrics, rooms } = dashboardData
+  const { doors, entityIndex, metrics, rooms } = dashboardData
   const idleTimeoutRef = useRef(null)
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
     window.localStorage.setItem(THEME_STORAGE_KEY, theme)
   }, [theme])
+
+  useEffect(() => {
+    window.localStorage.setItem(TITLE_BAR_VISIBLE_STORAGE_KEY, String(showTitleBar))
+  }, [showTitleBar])
 
   useEffect(() => {
     const resetIdleTimer = () => {
@@ -66,13 +72,14 @@ export default function App() {
     <div className="dashboard">
       <div className="page-shell">
         <DashboardHeader
-          activity={activity}
           entityIndex={entityIndex}
           onPowerOff={handlePowerOff}
           onRestart={handleRestart}
           onThemeChange={setTheme}
           occupiedRooms={rooms}
           openDoors={doors}
+          onTitleBarVisibilityChange={setShowTitleBar}
+          showTitleBar={showTitleBar}
           theme={theme}
         />
 

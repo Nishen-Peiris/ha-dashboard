@@ -614,6 +614,10 @@ body{
   overflow:auto;
 }
 
+.header-settings-popup{
+  width:min(420px, 100%);
+}
+
 .header-popup-head{
   display:flex;
   align-items:center;
@@ -633,6 +637,39 @@ body{
   place-items:center;
   cursor:pointer;
   box-shadow:var(--control-shadow);
+}
+
+.header-settings-section{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.header-settings-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+
+.header-settings-copy{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.header-settings-label{
+  color:var(--text-secondary);
+  font-size:13px;
+  font-weight:700;
+}
+
+.header-settings-help{
+  color:var(--text-soft);
+  font-size:12px;
+  font-weight:600;
+  line-height:1.3;
 }
 
 .home-section-heading{
@@ -1020,12 +1057,21 @@ body{
 .header-chip-row{
   display:flex;
   flex:0 1 auto;
-  flex-wrap:wrap;
+  flex-wrap:nowrap;
   margin-left:auto;
   gap:10px;
   justify-content:flex-end;
   align-items:flex-start;
   min-width:0;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+
+.header-chip-row::-webkit-scrollbar{
+  width:0;
+  height:0;
 }
 
 .header-chip{
