@@ -71,17 +71,19 @@ export default function App() {
   return (
     <div className="dashboard">
       <div className="page-shell">
-        <DashboardHeader
-          entityIndex={entityIndex}
-          onPowerOff={handlePowerOff}
-          onRestart={handleRestart}
-          onThemeChange={setTheme}
-          occupiedRooms={rooms}
-          openDoors={doors}
-          onTitleBarVisibilityChange={setShowTitleBar}
-          showTitleBar={showTitleBar}
-          theme={theme}
-        />
+        {showTitleBar ? (
+          <DashboardHeader
+            entityIndex={entityIndex}
+            onPowerOff={handlePowerOff}
+            onRestart={handleRestart}
+            onThemeChange={setTheme}
+            occupiedRooms={rooms}
+            openDoors={doors}
+            onTitleBarVisibilityChange={setShowTitleBar}
+            showTitleBar={showTitleBar}
+            theme={theme}
+          />
+        ) : null}
 
         <div className="content-layout">
           <NavigationRail
