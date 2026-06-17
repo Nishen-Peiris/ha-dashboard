@@ -16,6 +16,7 @@ import pendantLightImage from '../assets/device-pendant-light.png'
 import sonyBraviaImage from '../assets/sony-bravia.png'
 import vaporizerImage from '../assets/device-vaporizer.png'
 import vacuumImage from '../assets/device-xiaomi-h40-vacuum.png'
+import washingMachineImage from '../assets/device-washing-machine.png'
 
 export const ROOMS = [
   'Outdoor',
@@ -57,6 +58,11 @@ function formatStatusLabel(entity) {
   return value
     .replace(/_/g, ' ')
     .replace(/\b\w/g, (char) => char.toUpperCase())
+}
+
+function hasActiveStatus(entity, inactiveStates = ['idle', 'off', 'unknown', 'unavailable']) {
+  const state = entity?.state?.toLowerCase()
+  return Boolean(state) && !inactiveStates.includes(state)
 }
 
 function formatClimateSubtitle(isOn, temperature, filterRemaining) {
@@ -104,6 +110,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
   const livingRoomFan = entityIndex['fan.living_room_fan']
   const livingRoomMonitor = entityIndex['switch.nishen_s_monitor']
   const livingRoomVacuumStatus = entityIndex['sensor.xiaomi_ov51gl_cfcf_status']
+  const bathroomWashingMachineStatus = entityIndex['sensor.washing_machine_status']
   const outdoorLight = entityIndex['light.outdoor_light']
   const backRoomLight = entityIndex['light.back_room_light']
   const bathroomLight = entityIndex['light.bathroom_light']
@@ -157,6 +164,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
     ? (deviceToCharge?.state ?? 'Device To Charge')
     : undefined
   const vacuumSubtitle = formatStatusLabel(livingRoomVacuumStatus)
+  const washingMachineSubtitle = formatStatusLabel(bathroomWashingMachineStatus)
 
   return (
     <div className="rooms-shell">
@@ -410,6 +418,14 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               imageClassName="device-image-pendant-light"
               isOn={isBathroomLightOn}
               onToggle={() => onCallService('light', 'toggle', undefined, { entity_id: ['light.bathroom_light'] })}
+            />
+            <DeviceCard
+              title="Washing Machine"
+              subtitle={washingMachineSubtitle}
+              imageSrc={washingMachineImage}
+              imageClassName="device-image-washing-machine"
+              isOn={hasActiveStatus(bathroomWashingMachineStatus)}
+              showToggle={false}
             />
           </div>
         ) : (
