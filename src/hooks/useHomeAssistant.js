@@ -14,7 +14,7 @@ const STORAGE_KEY = 'ha-dashboard-settings'
 const RECONNECT_DELAY_MS = 5000
 const MAX_HISTORY_POINTS = 240
 const HISTORY_BACKFILL_HOURS = 12
-const OCCUPANCY_HINTS = ['occupancy', 'motion', 'presence']
+const OCCUPANCY_ENTITY_ID_PATTERN = /^binary_sensor\..+_occupancy$/
 const WEATHER_FORECAST_ENTITY_ID = 'weather.forecast_home'
 const WEATHER_FORECAST_REFRESH_MS = 30 * 60 * 1000
 const MAX_ACTIVITY_ITEMS = 5
@@ -43,10 +43,6 @@ function getFriendlyName(entity) {
 function stripSuffix(value, suffix) {
   const pattern = new RegExp(`\\s*${suffix}$`, 'i')
   return value.replace(pattern, '').trim()
-}
-
-function matchesHint(entity, hints) {
-  return hints.some((hint) => entity.entity_id.includes(hint))
 }
 
 function buildActivityItem(change) {
@@ -251,8 +247,7 @@ function buildDoorData(states) {
 function buildRoomData(states) {
   const rooms = states
     .filter((entity) => {
-      const deviceClass = entity.attributes?.device_class
-      return entity.entity_id.startsWith('binary_sensor.') && (OCCUPANCY_HINTS.includes(deviceClass) || matchesHint(entity, OCCUPANCY_HINTS))
+      return OCCUPANCY_ENTITY_ID_PATTERN.test(entity.entity_id)
     })
     .map((entity) => ({
       name: stripSuffix(getFriendlyName(entity), 'Occupancy'),
