@@ -2,6 +2,8 @@ import {
   Bath,
   BedDouble,
   ChefHat,
+  Circle,
+  CircleDot,
   DoorOpen,
   House,
   Sofa,
@@ -20,12 +22,24 @@ const NAV_ITEMS = [
   { key: 'Bathroom', label: 'Bathroom', shortLabel: 'Bath', icon: Bath, type: 'room' },
 ]
 
-export default function NavigationRail({ activePage, selectedRoom, onNavigate }) {
+export default function NavigationRail({
+  activePage,
+  selectedRoom,
+  occupiedRooms,
+  onNavigate,
+}) {
+  const occupancyByRoom = occupiedRooms.reduce((accumulator, room) => {
+    accumulator[room.name.toLowerCase()] = room.occupied
+    return accumulator
+  }, {})
+
   return (
     <nav className="nav-rail" aria-label="Primary navigation">
       <div className="nav-rail-track">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon
+          const roomOccupied = item.type === 'room' ? occupancyByRoom[item.key.toLowerCase()] : undefined
+          const OccupancyIcon = roomOccupied ? CircleDot : Circle
           const isActive = item.type === 'page'
             ? activePage === item.key
             : activePage === 'controls' && selectedRoom === item.key
@@ -40,6 +54,15 @@ export default function NavigationRail({ activePage, selectedRoom, onNavigate })
               aria-current={isActive ? 'page' : undefined}
               type="button"
             >
+              {item.type === 'room' && roomOccupied !== undefined ? (
+                <span
+                  className={`nav-rail-occupancy${roomOccupied ? ' occupied' : ''}`}
+                  aria-hidden="true"
+                  title={roomOccupied ? `${item.label} occupied` : `${item.label} vacant`}
+                >
+                  <OccupancyIcon size={10} strokeWidth={2.4} />
+                </span>
+              ) : null}
               <Icon size={18} />
               <span className="nav-rail-label">{item.shortLabel}</span>
             </button>

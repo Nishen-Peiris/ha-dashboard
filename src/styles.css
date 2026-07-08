@@ -942,6 +942,25 @@ body{
   text-overflow:ellipsis;
 }
 
+.nav-rail-occupancy{
+  position:absolute;
+  top:7px;
+  right:7px;
+  width:14px;
+  height:14px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--text-soft);
+  background:rgba(100,116,139,.12);
+}
+
+.nav-rail-occupancy.occupied{
+  color:#34d399;
+  background:rgba(52,211,153,.12);
+}
+
 .header{
   position:relative;
   display:flex;
@@ -2087,6 +2106,13 @@ body{
   .nav-rail-button{
     width:36px;
     min-height:36px;
+  }
+
+  .nav-rail-occupancy{
+    top:4px;
+    right:4px;
+    width:12px;
+    height:12px;
   }
 
   .title{

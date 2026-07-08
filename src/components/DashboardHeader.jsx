@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Clapperboard, DoorOpen, Fan, Home, Menu, Moon, Power, RotateCcw, Settings2, Snowflake, Sun, X } from 'lucide-react'
+import { Clapperboard, DoorOpen, Fan, Menu, Moon, Power, RotateCcw, Settings2, Snowflake, Sun, X } from 'lucide-react'
 
 const DEVICE_GROUPS = {
   lights: [
@@ -55,7 +55,6 @@ export default function DashboardHeader({
   onRestart,
   onThemeChange,
   onTitleBarVisibilityChange,
-  occupiedRooms,
   openDoors,
   showTitleBar,
   theme,
@@ -69,7 +68,6 @@ export default function DashboardHeader({
   const settingsDialogRef = useRef(null)
   const chipRowRef = useRef(null)
   const chipRefs = useRef(new Map())
-  const activeRooms = occupiedRooms.filter((room) => room.occupied)
   const activeDoors = openDoors.filter((door) => door.open)
   const lightsOn = DEVICE_GROUPS.lights.filter((entityId) => entityIndex[entityId]?.state === 'on').length
   const fansOn = DEVICE_GROUPS.fans.filter((entityId) => entityIndex[entityId]?.state === 'on').length
@@ -95,13 +93,6 @@ export default function DashboardHeader({
       label: 'Doors',
       value: formatCount(activeDoors.length, 'door'),
       items: activeDoors.map((door) => door.name),
-    } : null,
-    activeRooms.length > 0 ? {
-      key: 'occupancy',
-      icon: Home,
-      label: 'Occupancy',
-      value: formatCount(activeRooms.length, 'room'),
-      items: activeRooms.map((room) => room.name),
     } : null,
     lightsOn > 0 ? {
       key: 'lights',

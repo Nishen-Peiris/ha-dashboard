@@ -77,7 +77,6 @@ export default function App() {
             onPowerOff={handlePowerOff}
             onRestart={handleRestart}
             onThemeChange={setTheme}
-            occupiedRooms={rooms}
             openDoors={doors}
             onTitleBarVisibilityChange={setShowTitleBar}
             showTitleBar={showTitleBar}
@@ -88,6 +87,7 @@ export default function App() {
         <div className="content-layout">
           <NavigationRail
             activePage={activePage}
+            occupiedRooms={rooms}
             selectedRoom={selectedRoom}
             onNavigate={(item) => {
               if (item.type === 'page' && item.key === 'home') {
