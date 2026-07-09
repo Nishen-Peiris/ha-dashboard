@@ -38,13 +38,13 @@ export const doorLabels = {
   'binary_sensor.contact_sensor': 'Bathroom Door',
 }
 
-export const defaultMetrics = [
+export const metricDefinitions = [
   {
     title: 'Home Assistant',
     kind: 'history',
     stats: [
-      { label: 'CPU', value: 28, color: '#2563eb', dataKey: 'cpu' },
-      { label: 'Memory', value: 61, color: '#7c3aed', dataKey: 'memory' },
+      { label: 'CPU', color: '#2563eb', dataKey: 'cpu' },
+      { label: 'Memory', color: '#7c3aed', dataKey: 'memory' },
     ],
     historyKey: 'system',
     icon: Cpu,
@@ -54,8 +54,8 @@ export const defaultMetrics = [
     title: 'Network',
     kind: 'history',
     stats: [
-      { label: 'Download', value: 86, color: '#0ea5e9', displayLabel: '86 MB/s', dataKey: 'download' },
-      { label: 'Upload', value: 42, color: '#14b8a6', displayLabel: '42 MB/s', dataKey: 'upload' },
+      { label: 'Download', color: '#0ea5e9', dataKey: 'download' },
+      { label: 'Upload', color: '#14b8a6', dataKey: 'upload' },
     ],
     historyKey: 'network',
     icon: Activity,
@@ -65,7 +65,7 @@ export const defaultMetrics = [
     title: 'Air Quality',
     kind: 'history',
     stats: [
-      { label: 'PM2.5', value: 14, color: '#0f766e', displayLabel: '14 μg/m³', dataKey: 'pm25' },
+      { label: 'PM2.5', color: '#0f766e', dataKey: 'pm25' },
     ],
     historyKey: 'pm25',
     icon: Leaf,
@@ -74,12 +74,8 @@ export const defaultMetrics = [
   {
     title: 'Comfri Air Conditioner',
     kind: 'status',
-    status: {
-      value: 'Off',
-      tone: 'idle',
-    },
     stats: [
-      { label: 'Air Conditioner Filter', value: 18, color: '#d97706' },
+      { label: 'Air Conditioner Filter', color: '#d97706' },
     ],
     icon: Snowflake,
     imageSrc: airConditionerImage,
@@ -88,12 +84,8 @@ export const defaultMetrics = [
   {
     title: 'Xiaomi Robot Vacuum',
     kind: 'status',
-    status: {
-      value: 'Idle',
-      tone: 'idle',
-    },
     stats: [
-      { label: 'Vacuum Dust Bag', value: 18, color: '#dc2626' },
+      { label: 'Vacuum Dust Bag', color: '#dc2626' },
     ],
     icon: Bot,
     imageSrc: vacuumImage,
@@ -102,12 +94,8 @@ export const defaultMetrics = [
   {
     title: 'Xiaomi Air Purifier',
     kind: 'status',
-    status: {
-      value: 'Off',
-      tone: 'idle',
-    },
     stats: [
-      { label: 'Air Purifier Filter', value: 74, color: '#0f766e' },
+      { label: 'Air Purifier Filter', color: '#0f766e' },
     ],
     icon: Wind,
     imageSrc: airPurifierImage,
@@ -115,29 +103,8 @@ export const defaultMetrics = [
   },
 ]
 
-export const defaultMetricHistory = {
-  system: [
-    { index: 0, cpu: 24, memory: 52 },
-    { index: 1, cpu: 31, memory: 56 },
-    { index: 2, cpu: 27, memory: 59 },
-    { index: 3, cpu: 36, memory: 63 },
-    { index: 4, cpu: 29, memory: 61 },
-    { index: 5, cpu: 28, memory: 61 },
-  ],
-  network: [
-    { index: 0, download: 72, upload: 35 },
-    { index: 1, download: 80, upload: 38 },
-    { index: 2, download: 76, upload: 33 },
-    { index: 3, download: 91, upload: 47 },
-    { index: 4, download: 88, upload: 44 },
-    { index: 5, download: 86, upload: 42 },
-  ],
-  pm25: [
-    { index: 0, pm25: 11 },
-    { index: 1, pm25: 13 },
-    { index: 2, pm25: 15 },
-    { index: 3, pm25: 12 },
-    { index: 4, pm25: 16 },
-    { index: 5, pm25: 14 },
-  ],
+export const emptyMetricHistory = {
+  system: [],
+  network: [],
+  pm25: [],
 }

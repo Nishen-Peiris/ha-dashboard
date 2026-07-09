@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  defaultMetricHistory,
-  defaultMetrics,
   defaultSettings,
   doorEntities,
   doorLabels,
+  emptyMetricHistory,
+  metricDefinitions,
 } from '../data/dashboard'
 import { fetchEntityHistory, readSavedSettings, saveSettings, toWebSocketUrl } from '../lib/homeAssistant'
 
@@ -150,12 +150,42 @@ function getAirConditionerStatus(entity) {
   return getDeviceStatus(entity, ['on'], ['unavailable', 'unknown'])
 }
 
+function buildEmptyMetrics(history) {
+  return metricDefinitions.map((metric) => {
+    if (metric.kind === 'history') {
+      return {
+        ...metric,
+        stats: metric.stats.map((stat) => ({
+          ...stat,
+          value: 0,
+          displayLabel: '--',
+        })),
+        history: history[metric.historyKey] ?? [],
+      }
+    }
+
+    if (metric.kind === 'status') {
+      return {
+        ...metric,
+        status: {
+          value: '--',
+          tone: 'idle',
+        },
+        stats: metric.stats.map((stat) => ({
+          ...stat,
+          value: 0,
+          displayLabel: '--',
+        })),
+      }
+    }
+
+    return metric
+  })
+}
+
 function buildMetricsFromStates(states, mappings, history) {
   if (!states.length) {
-    return defaultMetrics.map((metric) => ({
-      ...metric,
-      history: metric.historyKey ? history[metric.historyKey] : undefined,
-    }))
+    return buildEmptyMetrics(history)
   }
 
   const stateIndex = buildStateIndex(states)
@@ -183,28 +213,28 @@ function buildMetricsFromStates(states, mappings, history) {
 
   return [
     {
-      ...defaultMetrics[0],
+      ...metricDefinitions[0],
       stats: systemStats,
       history: history.system,
     },
     {
-      ...defaultMetrics[1],
+      ...metricDefinitions[1],
       stats: networkStats,
       history: history.network,
     },
     {
-      ...defaultMetrics[2],
+      ...metricDefinitions[2],
       stats: pm25Stats,
       history: history.pm25,
     },
     {
-      ...defaultMetrics[3],
+      ...metricDefinitions[3],
       status: airConditionerStatus,
       stats: [getMappedStat(stateIndex, mappings.airConditionerFilter, 'Air Conditioner Filter', '#d97706')],
       tone: airConditionerStatus.tone === 'active' ? '#0f766e' : airConditionerStatus.tone === 'warn' ? '#d97706' : '#475569',
     },
     {
-      ...defaultMetrics[4],
+      ...metricDefinitions[4],
       status: vacuumStatus,
       stats: [
         getMappedStat(stateIndex, mappings.vacuumDustBag, 'Vacuum Dust Bag', '#dc2626'),
@@ -212,7 +242,7 @@ function buildMetricsFromStates(states, mappings, history) {
       tone: vacuumStatus.tone === 'active' ? '#0f766e' : vacuumStatus.tone === 'warn' ? '#d97706' : '#475569',
     },
     {
-      ...defaultMetrics[5],
+      ...metricDefinitions[5],
       status: airPurifierStatus,
       stats: [
         getMappedStat(stateIndex, mappings.airPurifierFilter, 'Air Purifier Filter', '#0f766e'),
@@ -383,7 +413,7 @@ function connectToHomeAssistant(baseUrl, token, onStates, onStateChanged, onFail
 export function useHomeAssistant() {
   const [settings, setSettings] = useState(() => readSavedSettings(STORAGE_KEY, defaultSettings))
   const [states, setStates] = useState([])
-  const [history, setHistory] = useState(defaultMetricHistory)
+  const [history, setHistory] = useState(emptyMetricHistory)
   const [weatherForecast, setWeatherForecast] = useState(EMPTY_WEATHER_FORECAST)
   const [activity, setActivity] = useState([])
   const commandSenderRef = useRef(null)
