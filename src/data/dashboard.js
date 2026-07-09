@@ -38,19 +38,6 @@ export const doorLabels = {
   'binary_sensor.contact_sensor': 'Bathroom Door',
 }
 
-export const defaultRooms = [
-  { name: 'Bedroom', occupied: true },
-  { name: 'Living Room', occupied: false },
-  { name: 'Kitchen', occupied: true },
-  { name: 'Bathroom', occupied: false },
-]
-
-export const defaultDoors = [
-  { name: 'Bedroom Door', open: false },
-  { name: 'Kitchen Door', open: false },
-  { name: 'Bathroom Door', open: true },
-]
-
 export const defaultMetrics = [
   {
     title: 'Home Assistant',

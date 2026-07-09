@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  defaultDoors,
   defaultMetricHistory,
   defaultMetrics,
-  defaultRooms,
   defaultSettings,
   doorEntities,
   doorLabels,
@@ -241,7 +239,7 @@ function buildDoorData(states) {
     })
     .filter(Boolean)
 
-  return doors.length ? doors : defaultDoors
+  return doors
 }
 
 function buildRoomData(states) {
@@ -254,7 +252,7 @@ function buildRoomData(states) {
       occupied: entity.state === 'on',
     }))
 
-  return rooms.length ? rooms.slice(0, 6) : defaultRooms
+  return rooms.slice(0, 6)
 }
 
 function mapHistorySeries(entityHistory, dataKey) {
