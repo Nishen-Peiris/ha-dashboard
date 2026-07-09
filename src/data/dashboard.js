@@ -27,12 +27,14 @@ export const defaultSettings = {
 export const doorEntities = [
   'binary_sensor.bedroom_door',
   'binary_sensor.kitchen_door',
+  'binary_sensor.main_door',
   'binary_sensor.contact_sensor',
 ]
 
 export const doorLabels = {
   'binary_sensor.bedroom_door': 'Bedroom Door',
   'binary_sensor.kitchen_door': 'Kitchen Door',
+  'binary_sensor.main_door': 'Main Door',
   'binary_sensor.contact_sensor': 'Bathroom Door',
 }
 
