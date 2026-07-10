@@ -607,15 +607,15 @@ export function useHomeAssistant() {
       const lastNetworkPoint = currentHistory.network[currentHistory.network.length - 1]
       const lastPm25Point = currentHistory.pm25[currentHistory.pm25.length - 1]
 
-      if (cpu !== null && memory !== null && (lastSystemPoint.cpu !== cpu || lastSystemPoint.memory !== memory)) {
+      if (cpu !== null && memory !== null && (lastSystemPoint?.cpu !== cpu || lastSystemPoint?.memory !== memory)) {
         nextHistory = appendHistoryPoint(nextHistory, 'system', { cpu, memory })
       }
 
-      if (download !== null && upload !== null && (lastNetworkPoint.download !== download || lastNetworkPoint.upload !== upload)) {
+      if (download !== null && upload !== null && (lastNetworkPoint?.download !== download || lastNetworkPoint?.upload !== upload)) {
         nextHistory = appendHistoryPoint(nextHistory, 'network', { download, upload })
       }
 
-      if (pm25 !== null && lastPm25Point.pm25 !== pm25) {
+      if (pm25 !== null && lastPm25Point?.pm25 !== pm25) {
         nextHistory = appendHistoryPoint(nextHistory, 'pm25', { pm25 })
       }
 
