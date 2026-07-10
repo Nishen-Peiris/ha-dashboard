@@ -2,8 +2,6 @@ import {
   Bath,
   BedDouble,
   ChefHat,
-  Circle,
-  CircleDot,
   DoorOpen,
   House,
   Sofa,
@@ -39,7 +37,6 @@ export default function NavigationRail({
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon
           const roomOccupied = item.type === 'room' ? occupancyByRoom[item.key.toLowerCase()] : undefined
-          const OccupancyIcon = roomOccupied ? CircleDot : Circle
           const isActive = item.type === 'page'
             ? activePage === item.key
             : activePage === 'controls' && selectedRoom === item.key
@@ -54,14 +51,12 @@ export default function NavigationRail({
               aria-current={isActive ? 'page' : undefined}
               type="button"
             >
-              {item.type === 'room' && roomOccupied !== undefined ? (
+              {item.type === 'room' && roomOccupied ? (
                 <span
-                  className={`nav-rail-occupancy${roomOccupied ? ' occupied' : ''}`}
+                  className="nav-rail-occupancy occupied"
                   aria-hidden="true"
-                  title={roomOccupied ? `${item.label} occupied` : `${item.label} vacant`}
-                >
-                  <OccupancyIcon size={10} strokeWidth={2.4} />
-                </span>
+                  title={`${item.label} occupied`}
+                />
               ) : null}
               <Icon size={18} />
               <span className="nav-rail-label">{item.shortLabel}</span>

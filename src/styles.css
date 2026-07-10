@@ -944,21 +944,15 @@ body{
 
 .nav-rail-occupancy{
   position:absolute;
-  top:7px;
-  right:7px;
-  width:14px;
-  height:14px;
+  top:9px;
+  right:9px;
+  width:8px;
+  height:8px;
   border-radius:999px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:var(--text-soft);
-  background:rgba(100,116,139,.12);
 }
 
 .nav-rail-occupancy.occupied{
-  color:#34d399;
-  background:rgba(52,211,153,.12);
+  background:#34d399;
 }
 
 .header{
