@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import MetricCard from './MetricCard'
 
 const SECOND_ROW_METRIC_TITLES = new Set([
-  'Comfri Air Conditioner',
+  'TCL Air Conditioner',
   'Xiaomi Robot Vacuum',
   'Xiaomi Air Purifier',
 ])

@@ -72,7 +72,7 @@ export const metricDefinitions = [
     tone: '#0f766e',
   },
   {
-    title: 'Comfri Air Conditioner',
+    title: 'TCL Air Conditioner',
     kind: 'status',
     stats: [
       { label: 'Air Conditioner Filter', color: '#d97706' },
