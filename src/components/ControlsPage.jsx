@@ -186,6 +186,9 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
     setAdjustmentModal(config)
     setDraftAdjustment(config.value)
   }
+  const adjustmentProgress = adjustmentModal
+    ? ((draftAdjustment - adjustmentModal.min) / Math.max(adjustmentModal.max - adjustmentModal.min, 1)) * 100
+    : 0
 
   useEffect(() => {
     if (!adjustmentModal) {
@@ -323,11 +326,14 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 subtitle={isFrontRoomLightOn ? `${Math.round(frontRoomLightLevel)}%` : undefined}
                 onCardClick={() => openAdjustmentModal({
                   title: 'Front Room Light',
+                  kind: 'brightness',
                   value: Math.max(1, Math.round(frontRoomLightLevel)),
                   min: 1,
                   max: 100,
                   step: 1,
                   displayValue: (value) => `${value}%`,
+                  minLabel: '1%',
+                  maxLabel: '100%',
                   onCommit: (value) => handleLightBrightnessChange('light.front_room_light', value),
                 })}
                 icon={Lightbulb}
@@ -341,11 +347,14 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 subtitle={isLightStripOn ? `${lightStripBrightness}%` : undefined}
                 onCardClick={() => openAdjustmentModal({
                   title: 'Light Strip',
+                  kind: 'brightness',
                   value: Math.max(1, lightStripBrightness),
                   min: 1,
                   max: 100,
                   step: 1,
                   displayValue: (value) => `${value}%`,
+                  minLabel: '1%',
+                  maxLabel: '100%',
                   onCommit: (value) => handleLightBrightnessChange('light.light_strip', value),
                 })}
                 icon={Lightbulb}
@@ -365,11 +374,14 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 subtitle={formatClimateSubtitle(isFrontRoomAcOn, frontRoomAcLevel, frontRoomAcFilterRemaining)}
                 onCardClick={() => openAdjustmentModal({
                   title: 'Front Room Air Conditioner',
+                  kind: 'temperature',
                   value: frontRoomAcLevel,
                   min: 26,
                   max: 30,
                   step: frontRoomAcTemperature?.attributes?.step ?? 1,
                   displayValue: (value) => `${Math.round(value)}°C`,
+                  minLabel: '26°C',
+                  maxLabel: '30°C',
                   onCommit: (value) => handleTemperatureChange('input_number.front_room_ac_temperature', value),
                 })}
                 imageSrc={airConditionerImage}
@@ -401,11 +413,14 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               subtitle={isOutdoorLightOn ? `${outdoorLightBrightness}%` : undefined}
               onCardClick={() => openAdjustmentModal({
                 title: 'Outdoor Light',
+                kind: 'brightness',
                 value: Math.max(1, outdoorLightBrightness),
                 min: 1,
                 max: 100,
                 step: 1,
                 displayValue: (value) => `${value}%`,
+                minLabel: '1%',
+                maxLabel: '100%',
                 onCommit: (value) => handleLightBrightnessChange('light.outdoor_light', value),
               })}
               icon={Lightbulb}
@@ -422,11 +437,14 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 subtitle={isKitchenLightOn ? `${kitchenLightBrightness}%` : undefined}
                 onCardClick={() => openAdjustmentModal({
                   title: 'Kitchen Light',
+                  kind: 'brightness',
                   value: Math.max(1, kitchenLightBrightness),
                   min: 1,
                   max: 100,
                   step: 1,
                   displayValue: (value) => `${value}%`,
+                  minLabel: '1%',
+                  maxLabel: '100%',
                   onCommit: (value) => handleLightBrightnessChange('light.kitchen_light', value),
                 })}
                 icon={Lightbulb}
@@ -477,11 +495,14 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
                 )}
                 onCardClick={() => openAdjustmentModal({
                   title: 'Bedroom Air Conditioner',
+                  kind: 'temperature',
                   value: bedroomAirConditionerTargetTemperature,
                   min: 26,
                   max: 30,
                   step: bedroomAirConditionerTemperature?.attributes?.step ?? 1,
                   displayValue: (value) => `${Math.round(value)}°C`,
+                  minLabel: '26°C',
+                  maxLabel: '30°C',
                   onCommit: (value) => handleTemperatureChange('input_number.bedroom_ac_temperature', value),
                 })}
                 imageSrc={airConditionerImage}
@@ -522,11 +543,14 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               subtitle={isBackRoomLightOn ? `${backRoomLightBrightness}%` : undefined}
               onCardClick={() => openAdjustmentModal({
                 title: 'Back Room Light',
+                kind: 'brightness',
                 value: Math.max(1, backRoomLightBrightness),
                 min: 1,
                 max: 100,
                 step: 1,
                 displayValue: (value) => `${value}%`,
+                minLabel: '1%',
+                maxLabel: '100%',
                 onCommit: (value) => handleLightBrightnessChange('light.back_room_light', value),
               })}
               icon={Lightbulb}
@@ -543,11 +567,14 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               subtitle={isBathroomLightOn ? `${bathroomLightBrightness}%` : undefined}
               onCardClick={() => openAdjustmentModal({
                 title: 'Bathroom Light',
+                kind: 'brightness',
                 value: Math.max(1, bathroomLightBrightness),
                 min: 1,
                 max: 100,
                 step: 1,
                 displayValue: (value) => `${value}%`,
+                minLabel: '1%',
+                maxLabel: '100%',
                 onCommit: (value) => handleLightBrightnessChange('light.bathroom_light', value),
               })}
               icon={Lightbulb}
@@ -572,7 +599,7 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
 
       {adjustmentModal ? (
         <div className="header-popup-backdrop">
-          <div className="header-popup controls-brightness-popup card" ref={adjustmentDialogRef} role="dialog" aria-label={adjustmentModal.title}>
+          <div className="header-popup controls-adjustment-popup card" ref={adjustmentDialogRef} role="dialog" aria-label={adjustmentModal.title}>
             <div className="header-popup-head">
               <div className="home-section-title">{adjustmentModal.title}</div>
               <button
@@ -586,24 +613,35 @@ export default function ControlsPage({ selectedRoom, entityIndex, onCallService 
               </button>
             </div>
 
-            <div className="controls-brightness-body">
-              <input
-                className="controls-brightness-slider"
-                type="range"
-                min={adjustmentModal.min}
-                max={adjustmentModal.max}
-                step={adjustmentModal.step}
-                value={draftAdjustment}
-                onChange={(event) => setDraftAdjustment(Number(event.target.value))}
-                onMouseUp={commitAdjustment}
-                onTouchEnd={commitAdjustment}
-                onKeyUp={(event) => {
-                  if (event.key.startsWith('Arrow') || event.key === 'Home' || event.key === 'End' || event.key === 'PageUp' || event.key === 'PageDown') {
-                    commitAdjustment()
-                  }
-                }}
-              />
-              <div className="controls-brightness-value">{adjustmentModal.displayValue(draftAdjustment)}</div>
+            <div className="controls-adjustment-body">
+              <div className="controls-adjustment-topline">
+                <div className={`controls-adjustment-value controls-adjustment-value-${adjustmentModal.kind}`}>
+                  {adjustmentModal.displayValue(draftAdjustment)}
+                </div>
+              </div>
+              <div className={`controls-adjustment-slider-wrap controls-adjustment-slider-wrap-${adjustmentModal.kind}`}>
+                <input
+                  className={`controls-adjustment-slider controls-adjustment-slider-${adjustmentModal.kind}`}
+                  type="range"
+                  min={adjustmentModal.min}
+                  max={adjustmentModal.max}
+                  step={adjustmentModal.step}
+                  value={draftAdjustment}
+                  style={{ '--slider-progress': `${adjustmentProgress}%` }}
+                  onChange={(event) => setDraftAdjustment(Number(event.target.value))}
+                  onMouseUp={commitAdjustment}
+                  onTouchEnd={commitAdjustment}
+                  onKeyUp={(event) => {
+                    if (event.key.startsWith('Arrow') || event.key === 'Home' || event.key === 'End' || event.key === 'PageUp' || event.key === 'PageDown') {
+                      commitAdjustment()
+                    }
+                  }}
+                />
+                <div className="controls-adjustment-scale" aria-hidden="true">
+                  <span>{adjustmentModal.minLabel}</span>
+                  <span>{adjustmentModal.maxLabel}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
